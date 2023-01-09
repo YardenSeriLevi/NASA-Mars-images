@@ -1,19 +1,23 @@
 //ולידציה
 (function () {
-    let firstName,lastName;
+    let firstName, lastName, email;
     let status = true;
     let sPicDate = new Date; //Start date of displaying the images
     let ePicDate; //End date of displaying the images
     let firstTime = true;
-    const STRINGLENGTH = 24;
+    const STRINGMAXLENGTH = 32;
+    const STRINGMINLENGTH = 3;
     const NUMOFDAYS = 2;
     const errorMassage = ["Please match the requested format", "Invalid date format",
         "It seems there are communication problems with the server",
-        "Looks like NASA still doesn't have a photo from this date"];
+        "Looks like NASA still doesn't have a photo from this date",
+    "incorrect email"];
     const NAMEERROR = 0;
     const DATEERROR = 1;
     const SERVERERROR = 2;
     const NASAERROR = 3;
+    const EMAILERROR = 4;
+
     const APIKEY = "b6IndMxrOlZml8AHgoRDk7mOqUTN0fAyNNxrhGMy";
     const UPDATETIME = 15000;
 
@@ -26,6 +30,34 @@
         document.getElementById(`${elm}`).classList.toggle("d-none");
     }
 
+    /** The DOM */
+    document.addEventListener("DOMContentLoaded", function () {
+
+        document.forms['register-form'].addEventListener("submit", function (event) {
+
+            validations.validateFormFields(event);
+
+        });
+
+        document.getElementById("date").addEventListener("click", (event) => {
+            ePicDate = document.getElementById("currDate").value;
+            validations.validateDate();
+            if (document.querySelector(".date-error").innerText === "")
+                display.getPicFromNasa();
+        });
+
+        document.getElementById("backButton").addEventListener("click", (event) => {
+            firstTime = true;
+            toggleElement("display");
+            toggleElement("login");
+        });
+
+        document.getElementById("more").addEventListener("click", (event) => {
+            display.setDates();
+            display.getPicFromNasa();
+        });
+
+    });
 
 
     /**
@@ -34,35 +66,60 @@
      */
     const validations = function () {
 
-            // //lastName
-            // firstName = this.firstName.value.trim();
-            // if (!validations.validateName(this.firstName.value.trim())) {
-            //     document.querySelector(".firstName-error").innerText = `${errorMassage[NAMEERROR]}`;
-            //     status = false;
-            // } else {
-            //     firstName = this.firstName.value.toLowerCase();
-            //     document.querySelector(".firstName-error").innerText = "";
-            //     toggleElement("login")
-            //     toggleElement("mainPage")
-            // }
+        function validateFormFields(event) {
+            event.preventDefault();
+            status = true;
+            firstName = document.getElementById("firstName").value;
+            lastName = document.getElementById("lastName").value;
+            email = document.getElementById("email").value;
 
+            validateName(firstName, "firstName-error");
+            validateName(lastName, "lastName-error");
+            validateEmail(email);
+            if(status)
+            {
+                console.log("good ")
+                event.target.submit()
+            }
+
+        }
 
 
         /**
          * Checks if the name entered by the user contains only letters and numbers,
          * and is up to 24 characters long
          * @param str: the name of the player
+         * @param error
          * @returns {boolean}
          */
-        function validateName(str) {
-            const regex = /^[a-zA-Z0-9]+$/;
-            return regex.test(str) && str.toString().length < STRINGLENGTH;
+        function validateName(str, error) {
+            const regex = /^[a-zA-Z]+$/;
+            if (regex.test(str) && str.toString().length < STRINGMAXLENGTH && str.toString().length > STRINGMINLENGTH)
+                document.querySelector(`.${error}`).innerText = "";
+            else {
+                document.querySelector(`.${error}`).innerText = `${errorMassage[NAMEERROR]}`;
+                status = false;
+            }
+
+        }
+
+        function validateEmail(str) {
+            const regex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+            if (regex.test(str) && str.toString().length < 32 && str.toString().length > 3)
+                document.querySelector(".email-error").innerText = "";
+            else
+            {
+                document.querySelector(".email-error").innerText = `${errorMassage[EMAILERROR]}`;
+                status = false;
+            }
         }
 
         /** A function that checks the correctness of the date that entered by the user
          */
         function validateDate() {
+            const d_reg = /^(0[1-9]|1[0-2])\/(0[1-9]|1\d|2\d|3[01])\/(19|20)\d{2}$/;
             document.querySelector(".date-error").innerText = "";
+
             if (ePicDate === "")
                 getCurrentDate();
             else if (!document.getElementById('currDate').checkValidity()) {
@@ -71,7 +128,6 @@
             } else
                 sPicDate = displayDate(ePicDate, NUMOFDAYS);
         }
-
 
         /**
          * A function that displays the date on the screen
@@ -98,9 +154,11 @@
         }
 
         return {
+            validateFormFields: validateFormFields,
             validateName: validateName,
             validateDate: validateDate,
             displayDate: displayDate
+
         }
     }();
 
@@ -110,6 +168,7 @@
         function getPicFromNasa() {
             fetch(`https://api.nasa.gov/planetary/apod?api_key=${APIKEY}&start_date=${sPicDate}&end_date=${ePicDate}`)
                 .then(function (res) {
+                    //console.log(res);
                     if (!res.ok)
                         throw(res.status)
                     return res.json()
@@ -174,6 +233,7 @@
 
     const createElements = function () {
         let currComment;
+
         /**
          * Creating the HTML elements
          * @param date: the date of the picture
@@ -227,6 +287,7 @@
             col2FifthRow.appendChild(createButton(date, "Show comments", `com${date}`));
 
             let enter = document.createElement("br");
+
             const element = document.getElementById("elements");
             element.appendChild(newRow);
             element.appendChild(enter);
@@ -234,7 +295,6 @@
             document.getElementById(`${date}`).addEventListener("click", (event) => {
                 toggleElement(`ex${date}`);
             });
-
             col2SixthRow.appendChild(createAllCommentsLabel(date));
             col2SixthRow.appendChild(commentLabel(date));
             toGetComment(date);
@@ -318,13 +378,6 @@
             return pictureCopyright;
         }
 
-        /**
-         * To create buttons
-         * @param date
-         * @param name
-         * @param id
-         * @returns {HTMLButtonElement}
-         */
         function createButton(date, name, id) {
             let comment = document.createElement("button");
             comment.innerText = `${name}`;
@@ -334,11 +387,6 @@
             return comment;
         }
 
-        /**
-         * To create label for the comments
-         * @param date
-         * @returns {HTMLLabelElement}
-         */
         function createAllCommentsLabel(date) {
             const allComments = document.createElement("label");
             allComments.setAttribute("id", `allComments${date}`);
@@ -352,14 +400,15 @@
          */
         function toAddComment(date) {
             document.getElementById(`button${date}`).addEventListener("click", (event) => {
+
                     currComment = document.getElementById(`c${date}`).value;
                     document.querySelector(`#c${date}`).value = "";
                     const comment = {
                         "date": date,
                         "user": username,
                         "txt": currComment
-                    }
 
+                    }
                     const options = {
                         method: 'POST',
                         body: JSON.stringify(comment),
@@ -380,6 +429,7 @@
          * @returns {HTMLDivElement}
          */
         function commentLabel(date) {
+
             let commentLabel = document.createElement("div");
             commentLabel.setAttribute("className", "input-group")
             commentLabel.setAttribute("class", "d-none");
@@ -395,6 +445,7 @@
             let errorWithServer = document.createElement("p");
             errorWithServer.setAttribute("id", `error${date}`);
             return commentLabel;
+
         }
 
         /**
@@ -444,7 +495,10 @@
                 commentDiv.appendChild(textP);
 
                 if (comment.userName === username) {
+                    let div = document.createElement("row-3")
                     const deleteButton = createButton(comment.date, "Delete", `button${comment.id}`)
+                    div.appendChild(deleteButton)
+
                     deleteButton.addEventListener('click', () => {
                         const params = {
                             "date": comment.date,
@@ -460,48 +514,15 @@
                         connectingToOurServer.deleteMethod(options);
                         showComments(comment.date);
                     });
-                    textP.appendChild(deleteButton);
+                    textP.appendChild(div);
                 }
                 document.getElementById(`allComments${comment.date}`).appendChild(commentDiv);
             })
         }
 
-
-        /** The DOM */
-        document.addEventListener("DOMContentLoaded", function () {
-            console.log("DOM Loaded");
-            document.forms['register-form'].addEventListener("submit", function (event) {
-
-                event.preventDefault();
-
-                // validations.validateFormFields();
-
-            });
-
-            document.getElementById("date").addEventListener("click", (event) => {
-                ePicDate =document.getElementById("currDate").value;
-                validations.validateDate();
-                if (document.querySelector(".date-error").innerText === "")
-                    display.getPicFromNasa();
-            });
-
-            document.getElementById("backButton").addEventListener("click", (event) => {
-                firstTime = true;
-                toggleElement("display");
-                toggleElement("login");
-            });
-
-            document.getElementById("more").addEventListener("click", (event) => {
-                display.setDates();
-                display.getPicFromNasa();
-            });
-
-        });
-
         return {
             createPicElements: createPicElements,
             presentComments: presentComments
-
         }
     }();
 
@@ -511,10 +532,7 @@
      * @type {{postMethod: postMethod, getMethod: getMethod, deleteMethod: deleteMethod}}
      */
     const connectingToOurServer = function () {
-        /**
-         * GET function
-         * @param params
-         */
+        //get
         function getMethod(params) {
             const queryString = new URLSearchParams(params).toString();
             fetch(`/api/comment/?${queryString}`)
@@ -529,37 +547,26 @@
                 })
         }
 
-        /**
-         * POST function
-         * @param options
-         */
+        //post
         function postMethod(options) {
             fetch('/api/comment', options)
                 .then((response) => response.json())
                 .then((data) => console.log(data));
         }
 
-        /**
-         * DELETE function
-         * @param options
-         */
+        //delete
         function deleteMethod(options) {
             fetch('/api/comment', options)
                 .then((response) => response.json())
                 .then((data) => console.log(data));
 
         }
+
         return {
             getMethod: getMethod,
             postMethod: postMethod,
             deleteMethod: deleteMethod
         }
     }();
-    //const validFields = validations.validateFormFields;
-    // export const validateFields = validations.validateFormFields;
-
 })
 ();
-
-
-

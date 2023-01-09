@@ -23,11 +23,16 @@ router.post('/login', function(req, res, next) {
 });
 
 router.get('/password', function(req, res, next) {
-  res.render('password', { title: 'Express' });
+  res.render('register', { title: 'Express' });
 });
 
 router.post('/password', function(req, res, next) {
-  res.render('password', { title: 'Express' });
+
+  //if email exist:
+  // do somthing whith cockies and send beck
+  res.render('register', { title: 'Express' });
+
+  //if email does not exist add continue ling that will take us to password page
 });
 
 

@@ -3,11 +3,11 @@
 <div class="row bg-light ">
     <div class="d-block" id="login">
 
-        <form class="needs-validation" novalidate id="register-form" action="password" method="post">
+        <form class="needs-validation" novalidate id="register-form" action="/password" method="post">
             <div class="col-6">
 
                 <label>First Name</label>
-                <input class="form-control" type="text" name="firstName"
+                <input class="form-control" type="text" name="firstName" id ="firstName"
                        placeholder="Your first name including letters only"
                        aria-label="default input example" required/>
                 <p class="error firstName-error"></p>
@@ -16,17 +16,20 @@
 
             <div class="col-6">
                 <label>Last Name</label>
-                <input class="form-control" type="text" name="lastName"
+                <input class="form-control" type="text" name="lastName" id ="lastName"
                        placeholder="Your last name including letters only"
-                       aria-label="default input example" onblur="validateStr(this.value)" required/>
+                       aria-label="default input example" required/>
                 <p class="error lastName-error"></p>
             </div>
 
             <div class="col-6">
                 <label>Email</label>
-                <input class="form-control" type="email" name="email"
+                <input class="form-control" type="email" name="email" id="email"
                        placeholder="Your email address"
-                       aria-label="default input example" onblur="validateEmail(this.value)" required/>
+                       aria-label="default input example" required/>
+<!--                <input class="form-control" type="email" name="email" id="email"-->
+<!--                       placeholder="Your email address"-->
+<!--                       aria-label="default input example" onblur="validateEmail(this.value)" required/>-->
                 <p class="error email-error"></p>
             </div>
             <button type="submit" class="btn btn-primary">submit</button>
