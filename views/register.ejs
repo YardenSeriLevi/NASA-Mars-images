@@ -4,37 +4,50 @@
     <div class="d-block" id="login">
 
         <form class="needs-validation" novalidate id="register-form" action="/password" method="post">
-            <div class="col-6">
+            <div class="col-6 offset-3 mb-2 mt-2">
 
-                <label>First Name</label>
-                <input class="form-control" type="text" name="firstName" id ="firstName"
-                       placeholder="Your first name including letters only"
-                       aria-label="default input example" required/>
-                <p class="error firstName-error"></p>
+                <!--                <label>First Name</label>-->
+                <!--                <input class="form-control" type="text" name="firstName" id ="firstName"-->
+                <!--                       placeholder="Your first name including letters only"-->
+                <!--                       aria-label="default input example" required/>-->
+                <!--                <div class="text-danger mt-2"></div>-->
+                <div>
+                    <label for="firstName">First Name:</label>
+                    <input type="text" id="firstName" class="form-control" name="firstName"
+                           placeholder="Please enter your first name here"
+                           aria-label="default input example" required/>
+                    <div class="text-danger mt-2" id="firstNameError"></div>
+                    <p class="error firstName-error"></p>
+                </div>
             </div>
 
 
-            <div class="col-6">
+            <div class="col-6 offset-3 mb-2 mt-2">
                 <label>Last Name</label>
-                <input class="form-control" type="text" name="lastName" id ="lastName"
+                <input class="form-control" type="text" name="lastName" id="lastName"
                        placeholder="Your last name including letters only"
                        aria-label="default input example" required/>
                 <p class="error lastName-error"></p>
             </div>
 
-            <div class="col-6">
+            <div class="col-6 offset-3 mb-2 mt-2">
                 <label>Email</label>
                 <input class="form-control" type="email" name="email" id="email"
                        placeholder="Your email address"
                        aria-label="default input example" required/>
-<!--                <input class="form-control" type="email" name="email" id="email"-->
-<!--                       placeholder="Your email address"-->
-<!--                       aria-label="default input example" onblur="validateEmail(this.value)" required/>-->
+                <!--                <input class="form-control" type="email" name="email" id="email"-->
+                <!--                       placeholder="Your email address"-->
+                <!--                       aria-label="default input example" onblur="validateEmail(this.value)" required/>-->
                 <p class="error email-error"></p>
             </div>
-            <button type="submit" class="btn btn-primary">submit</button>
+            <div class="col-6 offset-3 mb-2 mt-2">
+                <button type="submit" class="btn btn-primary">submit</button>
+                <div class="text-center">
+                    <h6><span>Already have an account?</span>
+                        <a href="/login" class="text-decoration-none">Sign-in</a></h6>
+                </div>
+            </div>
         </form>
-
     </div>
 
     <div class=" d-none" id="mainPage">
@@ -61,30 +74,6 @@
 
 </div>
 
-
-
-<!--onblur="validateStr(this.value)"-->
-<!--<script>-->
-<!--    function validateStr(str)-->
-<!--    {-->
-<!--        const regex = /^[a-zA-Z]+$/;-->
-<!--        if(!(regex.test(str) && str.toString().length < 32 && str.toString().length > 3))-->
-<!--        {-->
-<!--            document.querySelector(".lastName-error").innerText = "wrong input";-->
-<!--        }-->
-<!--    }-->
-<!--</script>-->
-
-<!--<script>-->
-<!--    function validateEmail(str)-->
-<!--    {-->
-<!--        const regex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;-->
-<!--        if(!(regex.test(str) && str.toString().length < 32 && str.toString().length > 3))-->
-<!--        {-->
-<!--            document.querySelector(".email-error").innerText = "wrong email address";-->
-<!--        }-->
-<!--    }-->
-<!--</script>-->
 
 <%- include('includes/endPage.ejs') %>
 

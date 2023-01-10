@@ -1,5 +1,8 @@
 var express = require('express');
 var router = express.Router();
+const Cookies = require('cookies')
+const keys = ['keyboard cat']
+
 
 /* GET home page. */
 // router.get('/', function(req, res, next) {
@@ -27,6 +30,23 @@ router.get('/password', function(req, res, next) {
 });
 
 router.post('/password', function(req, res, next) {
+  const {firstName, lastName, email} = req.body;
+
+  const data = {
+    "firstName": firstName,
+    "lastName": lastName,
+    "email": email
+  }
+  const cookies = new Cookies(req, res, { keys: keys })
+
+  cookies.set('data', JSON.stringify(data), { signed: true, maxAge: 30*1000})
+
+
+
+
+
+
+
 
   //if email exist:
   // do somthing whith cockies and send beck
