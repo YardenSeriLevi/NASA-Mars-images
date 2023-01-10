@@ -10,7 +10,7 @@ const keys = ['keyboard cat']
 // });
 
 router.get('/', function(req, res, next) {
-  res.render('register', { title: 'Express' });
+  res.render('register', { firstName: "",lastName:"",email:"" });
 });
 
 
@@ -37,9 +37,22 @@ router.post('/password', function(req, res, next) {
     "lastName": lastName,
     "email": email
   }
+
   const cookies = new Cookies(req, res, { keys: keys })
 
-  cookies.set('data', JSON.stringify(data), { signed: true, maxAge: 30*1000})
+  let userData = cookies.get('data', {signed: true});
+
+
+  if(userData)
+  {
+    let allData = JSON.parse(userData);
+    res.render('register', { firstName: allData.firstName,lastName :allData.lastName,email :allData.email });
+  }
+  else
+  {
+    cookies.set('data', JSON.stringify(data), { signed: true, maxAge: 30*1000})
+    res.render('register', { firstName:"",lastName :"",email :"" });
+  }
 
 
 

@@ -73,14 +73,11 @@
             lastName = document.getElementById("lastName").value;
             email = document.getElementById("email").value;
 
-            validateName(firstName, "firstName-error");
-            validateName(lastName, "lastName-error");
+            validateStr(firstName, "firstName-error");
+            validateStr(lastName, "lastName-error");
             validateEmail(email);
             if(status)
-            {
-                console.log("good ")
                 event.target.submit()
-            }
 
         }
 
@@ -92,7 +89,7 @@
          * @param error
          * @returns {boolean}
          */
-        function validateName(str, error) {
+        function validateStr(str, error) {
             const regex = /^[a-zA-Z]+$/;
             if (regex.test(str) && str.toString().length < STRINGMAXLENGTH && str.toString().length > STRINGMINLENGTH)
                 document.querySelector(`.${error}`).innerText = "";

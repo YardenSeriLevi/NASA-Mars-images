@@ -15,7 +15,7 @@
                     <label for="firstName">First Name:</label>
                     <input type="text" id="firstName" class="form-control" name="firstName"
                            placeholder="Please enter your first name here"
-                           aria-label="default input example" required/>
+                           aria-label="default input example" required  value = <%= firstName %> >
                     <div class="text-danger mt-2" id="firstNameError"></div>
                     <p class="error firstName-error"></p>
                 </div>
@@ -26,7 +26,7 @@
                 <label>Last Name</label>
                 <input class="form-control" type="text" name="lastName" id="lastName"
                        placeholder="Your last name including letters only"
-                       aria-label="default input example" required/>
+                       aria-label="default input example" required value = <%= lastName %>>
                 <p class="error lastName-error"></p>
             </div>
 
@@ -34,7 +34,7 @@
                 <label>Email</label>
                 <input class="form-control" type="email" name="email" id="email"
                        placeholder="Your email address"
-                       aria-label="default input example" required/>
+                       aria-label="default input example" required value = <%= email %>>
                 <!--                <input class="form-control" type="email" name="email" id="email"-->
                 <!--                       placeholder="Your email address"-->
                 <!--                       aria-label="default input example" onblur="validateEmail(this.value)" required/>-->
