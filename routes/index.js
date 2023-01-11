@@ -9,28 +9,48 @@ const keys = ['keyboard cat']
 //   res.render('index', { title: 'Express' });
 // });
 
+// router.get('/', function(req, res, next) {
+//   res.render('register', { firstName: "",lastName:"",email:"" });
+// });
 router.get('/', function(req, res, next) {
-  res.render('register', { firstName: "",lastName:"",email:"" });
+  res.render('login');
 });
 
 
-router.get('/login', function(req, res, next) {
-  res.render('login', { title: 'Express' });
+router.get('/register', function(req, res, next) {
+  const cookies = new Cookies(req, res, { keys: keys })
+
+  let userData = cookies.get('data', {signed: true});
+
+  if(userData)
+  {
+    let allData = JSON.parse(userData);
+    res.render('register', { firstName: allData.firstName,lastName :allData.lastName,email :allData.email });
+
+  }
+  else
+  {
+    console.log("in register in get")
+    res.render('register', { firstName:"",lastName :"",email :""});
+  }
+
+  //res.redirect('register');
 });
 
 
 router.post('/login', function(req, res, next) {
   res.render('register', { title: 'Express' });
 
-
 });
 
 router.get('/password', function(req, res, next) {
-  res.render('register', { title: 'Express' });
+  res.render('password');
 });
 
 router.post('/password', function(req, res, next) {
   const {firstName, lastName, email} = req.body;
+
+  console.log("in password in post")
 
   const data = {
     "firstName": firstName,
@@ -43,27 +63,30 @@ router.post('/password', function(req, res, next) {
   let userData = cookies.get('data', {signed: true});
 
 
+  // if(userData)
+  // {
+  //   let allData = JSON.parse(userData);
+  //   res.render('register', { firstName: allData.firstName,lastName :allData.lastName,email :allData.email });
+  // }
+  // else
+  // {
+  //   cookies.set('data', JSON.stringify(data), { signed: true, maxAge: 30*1000})
+  //   res.render('register', { firstName:"",lastName :"",email :"" });
+  // }
   if(userData)
   {
     let allData = JSON.parse(userData);
-    res.render('register', { firstName: allData.firstName,lastName :allData.lastName,email :allData.email });
+    res.redirect('password')
   }
   else
   {
-    cookies.set('data', JSON.stringify(data), { signed: true, maxAge: 30*1000})
-    res.render('register', { firstName:"",lastName :"",email :"" });
+    console.log("in password in post in else")
+    cookies.set('data', JSON.stringify(data), { signed: true, maxAge: 5*1000})
+    res.redirect('password')
   }
-
-
-
-
-
-
-
-
   //if email exist:
   // do somthing whith cockies and send beck
-  res.render('register', { title: 'Express' });
+  //res.render('register', { title: 'Express' });
 
   //if email does not exist add continue ling that will take us to password page
 });
