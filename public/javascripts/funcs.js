@@ -39,6 +39,11 @@
 
         });
 
+        document.forms['password-form'].addEventListener("submit", function (event) {
+
+            validations.validatePassword(event);
+
+        });
         document.getElementById("date").addEventListener("click", (event) => {
             ePicDate = document.getElementById("currDate").value;
             validations.validateDate();
@@ -61,12 +66,13 @@
 
 
     /**
-     * A function that checks the correctness of the date entered by the user and the name of the user
-     * @type {{displayDate: (function(*, *): string), validateName: (function(*)), validateDate: validateDate}}
+     *
+     * @type {{validatePassword: validatePassword, displayDate: (function(*, *): string), validateFormFields: validateFormFields, validateDate: validateDate}}
      */
     const validations = function () {
 
         function validateFormFields(event) {
+            console.log("in validation ")
             event.preventDefault();
             status = true;
             firstName = document.getElementById("firstName").value;
@@ -111,6 +117,11 @@
             }
         }
 
+        function  validatePassword(event)
+        {
+            event.preventDefault();
+            console.log("in validatePassword")
+        }
         /** A function that checks the correctness of the date that entered by the user
          */
         function validateDate() {
@@ -152,7 +163,7 @@
 
         return {
             validateFormFields: validateFormFields,
-            validateName: validateName,
+            validatePassword:validatePassword,
             validateDate: validateDate,
             displayDate: displayDate
 

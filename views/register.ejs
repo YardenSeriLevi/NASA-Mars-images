@@ -1,10 +1,12 @@
 <%- include('includes/head.ejs') %>
+<%let mode%>
 
 <div class="row bg-light ">
     <div class="d-block" id="login">
 
         <form class="needs-validation" novalidate id="register-form" action="/password" method="post">
             <div class="col-6 offset-3 mb-2 mt-2">
+                <p><%error%></p>
 
                 <!--                <label>First Name</label>-->
                 <!--                <input class="form-control" type="text" name="firstName" id ="firstName"-->
@@ -20,7 +22,9 @@
                     <p class="error firstName-error"></p>
                 </div>
             </div>
-
+            <% if (firstName) { %>
+                <% document.querySelector(".error-info").innerText = "register process expired, please try again"%>
+            <% } %>
 
             <div class="col-6 offset-3 mb-2 mt-2">
                 <label>Last Name</label>
@@ -50,27 +54,8 @@
         </form>
     </div>
 
-    <div class=" d-none" id="mainPage">
-
-        <div class="col-6">
-
-            <label>Get picture/video from date:</label>
-            <input class="form-control" type="date" id="currDate"
-                   aria-label="default input example"
-                   min="1900-01-01" max="2023-12-31">
-
-        </div>
-        <button type="submit" id="date" class="btn btn-primary">submit</button>
-        <p class="error date-error"></p>
-    </div>
 </div>
 
-<div id="display" class="d-none">
-    <div id="elements"></div>
-    <p class="error server-error"></p>
-    <button type="submit" id="more" class="btn btn-primary">More</button>
-    <button type="button" id="backButton" class="btn btn-primary ">Back</button>
-</div>
 
 </div>
 

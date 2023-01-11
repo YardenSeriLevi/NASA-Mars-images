@@ -30,8 +30,7 @@ router.get('/register', function(req, res, next) {
   }
   else
   {
-    console.log("in register in get")
-    res.render('register', { firstName:"",lastName :"",email :""});
+    res.render('register', { firstName:"",lastName :"",email :"",error:""});
   }
 
   //res.redirect('register');
@@ -49,9 +48,6 @@ router.get('/password', function(req, res, next) {
 
 router.post('/password', function(req, res, next) {
   const {firstName, lastName, email} = req.body;
-
-  console.log("in password in post")
-
   const data = {
     "firstName": firstName,
     "lastName": lastName,
@@ -91,5 +87,19 @@ router.post('/password', function(req, res, next) {
   //if email does not exist add continue ling that will take us to password page
 });
 
+router.post('/nasa', function(req, res, next) {
+  const cookies = new Cookies(req, res, { keys: keys })
+
+  let userData = cookies.get('data', {signed: true});
+  if(userData)
+  {
+    console.log("in post nasaa ")
+    res.render('nasa', { title: 'Express' });
+  }
+
+  else
+    res.render('register', { firstName:"",lastName :"",email :"",error:"register process expired, please try again"});
+
+});
 
 module.exports = router;
