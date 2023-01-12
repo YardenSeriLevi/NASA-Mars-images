@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const Cookies = require('cookies')
+const db = require('../models');
 const keys = ['keyboard cat']
 
 
@@ -15,17 +16,27 @@ const keys = ['keyboard cat']
 router.get('/', function(req, res, next) {
   res.render('login');
 });
+router.get('/login', function(req, res, next) {
+  res.render('login');
+});
 
 
 router.get('/register', function(req, res, next) {
   const cookies = new Cookies(req, res, { keys: keys })
 
+  const error = cookies.get('expired')
   let userData = cookies.get('data', {signed: true});
 
-  if(userData)
+  if (error){
+    console.log("error")
+    res.render('register', { firstName: '',lastName :'',email :'' ,error: error});
+  }
+
+
+  else if(userData)
   {
     let allData = JSON.parse(userData);
-    res.render('register', { firstName: allData.firstName,lastName :allData.lastName,email :allData.email });
+    res.render('register', { firstName: allData.firstName,lastName :allData.lastName,email :allData.email ,error:""});
 
   }
   else
@@ -76,15 +87,9 @@ router.post('/password', function(req, res, next) {
   }
   else
   {
-    console.log("in password in post in else")
     cookies.set('data', JSON.stringify(data), { signed: true, maxAge: 5*1000})
     res.redirect('password')
   }
-  //if email exist:
-  // do somthing whith cockies and send beck
-  //res.render('register', { title: 'Express' });
-
-  //if email does not exist add continue ling that will take us to password page
 });
 
 router.post('/nasa', function(req, res, next) {
@@ -98,7 +103,11 @@ router.post('/nasa', function(req, res, next) {
   }
 
   else
-    res.render('register', { firstName:"",lastName :"",email :"",error:"register process expired, please try again"});
+  {
+    cookies.set('expired', 'expired', { signed: true, maxAge: 1000})
+    res.redirect('/register');
+
+  }
 
 });
 

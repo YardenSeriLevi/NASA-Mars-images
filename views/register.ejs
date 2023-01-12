@@ -1,12 +1,13 @@
 <%- include('includes/head.ejs') %>
+
 <%let mode%>
 
 <div class="row bg-light ">
     <div class="d-block" id="login">
-
+        <div><%=error%></div>
         <form class="needs-validation" novalidate id="register-form" action="/password" method="post">
             <div class="col-6 offset-3 mb-2 mt-2">
-                <p><%error%></p>
+
 
                 <!--                <label>First Name</label>-->
                 <!--                <input class="form-control" type="text" name="firstName" id ="firstName"-->
@@ -22,10 +23,6 @@
                     <p class="error firstName-error"></p>
                 </div>
             </div>
-            <% if (firstName) { %>
-                <% document.querySelector(".error-info").innerText = "register process expired, please try again"%>
-            <% } %>
-
             <div class="col-6 offset-3 mb-2 mt-2">
                 <label>Last Name</label>
                 <input class="form-control" type="text" name="lastName" id="lastName"

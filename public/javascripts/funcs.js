@@ -33,6 +33,9 @@
     /** The DOM */
     document.addEventListener("DOMContentLoaded", function () {
 
+        const register =  document.getElementById("register-form")
+
+        if()
         document.forms['register-form'].addEventListener("submit", function (event) {
 
             validations.validateFormFields(event);
