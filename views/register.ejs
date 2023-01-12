@@ -1,10 +1,11 @@
 <%- include('includes/head.ejs') %>
 
-<%let mode%>
+
+
 
 <div class="row bg-light ">
     <div class="d-block" id="login">
-        <div><%=error%></div>
+        <div class="col-6 offset-3 mb-2 mt-2" style="color:red"> <%=error%> </div>
         <form class="needs-validation" novalidate id="register-form" action="/password" method="post">
             <div class="col-6 offset-3 mb-2 mt-2">
 
@@ -20,7 +21,7 @@
                            placeholder="Please enter your first name here"
                            aria-label="default input example" required  value = <%= firstName %> >
                     <div class="text-danger mt-2" id="firstNameError"></div>
-                    <p class="error firstName-error"></p>
+                    <p style="color:red" class="error firstName-error"></p>
                 </div>
             </div>
             <div class="col-6 offset-3 mb-2 mt-2">
@@ -28,7 +29,8 @@
                 <input class="form-control" type="text" name="lastName" id="lastName"
                        placeholder="Your last name including letters only"
                        aria-label="default input example" required value = <%= lastName %>>
-                <p class="error lastName-error"></p>
+                <p style="color:red" class="error lastName-error"></p>
+<!--                <div class="error lastName-error" style="color:red"></div>-->
             </div>
 
             <div class="col-6 offset-3 mb-2 mt-2">
@@ -39,7 +41,7 @@
                 <!--                <input class="form-control" type="email" name="email" id="email"-->
                 <!--                       placeholder="Your email address"-->
                 <!--                       aria-label="default input example" onblur="validateEmail(this.value)" required/>-->
-                <p class="error email-error"></p>
+                <p style="color:red" class="error email-error"></p>
             </div>
             <div class="col-6 offset-3 mb-2 mt-2">
                 <button type="submit" class="btn btn-primary">submit</button>
@@ -56,7 +58,7 @@
 
 </div>
 
-
+<script src="javascripts/registerForm.js">
 <%- include('includes/endPage.ejs') %>
 
 
