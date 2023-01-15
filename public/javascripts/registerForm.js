@@ -21,9 +21,26 @@
     /** The DOM */
     document.addEventListener("DOMContentLoaded", function () {
 
+        const firstName = document.getElementById("firstName")
+        const lastName = document.getElementById("lastName")
+        const email = document.getElementById("email")
+
+        firstName.addEventListener("change",function()
+        {
+            validations.validateStr(firstName.value.trim(),"firstName-error")
+        })
+        lastName.addEventListener("change",function()
+        {
+            validations.validateStr(lastName.value.trim(),"lastName-error")
+        })
+        email.addEventListener("change",function()
+        {
+            validations.validateEmail(email.value.trim(),"email-error")
+        })
+
         document.forms['register-form'].addEventListener("submit", function (event) {
 
-            validations.validateFormFields(event);
+            validations.validateFormFields(event,firstName.value.trim(),lastName.value.trim(),email.value.trim());
 
         });
     });
@@ -36,36 +53,41 @@
         /**
          *
          * @param event
+         * @param firstName
+         * @param lastName
+         * @param email
          */
-        function validateFormFields(event) {
+        function validateFormFields(event,firstName,lastName,email) {
             event.preventDefault();
             status = true;
-            firstName = document.getElementById("firstName").value;
-            lastName = document.getElementById("lastName").value;
-            email = document.getElementById("email").value;
+            console.log(firstName +"\n")
+            console.log(lastName+ "\n")
+            console.log(email+"\n")
 
             validateStr(firstName, "firstName-error");
             validateStr(lastName, "lastName-error");
             validateEmail(email);
             if (status)
+            {
                 event.target.submit();
+            }
+
 
         }
-
         /**
          *
          * @param str
          * @param error
          */
         function validateStr(str, error) {
+
             const regex = /^[a-zA-Z]+$/;
-            if (regex.test(str) && str.toString().length < STRINGMAXLENGTH && str.toString().length > STRINGMINLENGTH)
+            if (regex.test(str.trim()) && str.toString().length < STRINGMAXLENGTH && str.toString().length > STRINGMINLENGTH)
                 document.querySelector(`.${error}`).innerText = "";
             else {
                 document.querySelector(`.${error}`).innerText = `${errorMassage[NAMEERROR]}`;
                 status = false;
             }
-
         }
         /**
          *
@@ -82,6 +104,8 @@
         }
         return {
             validateFormFields: validateFormFields,
+            validateStr:validateStr,
+            validateEmail:validateEmail
         }
     }();
 })

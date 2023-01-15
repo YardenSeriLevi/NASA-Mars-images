@@ -28,7 +28,7 @@ router.get('/register', function (req, res, next) {
     let userData = cookies.get('data', {signed: true});
 
     if (error) {
-        res.render('register', {firstName: '', lastName: '', email: '', error: error});
+        res.render('register', {error: error});
     } else if (userData) {
         let allData = JSON.parse(userData);
         res.render('register', {
@@ -39,7 +39,7 @@ router.get('/register', function (req, res, next) {
         });
 
     } else {
-        res.render('register', {firstName: "", lastName: "", email: "", error: ""});
+        res.render('register', {error: ""});
     }
 
     //res.redirect('register');
@@ -77,7 +77,7 @@ router.post('/password', function (req, res, next) {
         let allData = JSON.parse(userData);
         res.redirect('password')
     } else {
-        cookies.set('data', JSON.stringify(data), {signed: true, maxAge: 30 * 1000})
+        cookies.set('data', JSON.stringify(data), {signed: true, maxAge: 3 * 1000})
         res.redirect('password')
     }
 });
@@ -89,12 +89,13 @@ router.post('/nasa', function (req, res, next) {
     let userData = cookies.get('data', {signed: true});
     if (userData) {
         let allData = JSON.parse(userData);
-        let u = db.Contact.build({
+        db.Contact.create({
             firstName: allData.firstName,
             lastName: allData.lastName,
             email: allData.email,
             password: password
-        });
+        }).then();
+
         // return u.save()
         //     .then((contact) => res.render('added', {message: "The contact was added successfully!"}))
         //     .catch((err) => {
