@@ -60,19 +60,11 @@
         function validateFormFields(event,firstName,lastName,email) {
             event.preventDefault();
             status = true;
-            console.log(firstName +"\n")
-            console.log(lastName+ "\n")
-            console.log(email+"\n")
-
             validateStr(firstName, "firstName-error");
             validateStr(lastName, "lastName-error");
             validateEmail(email);
             if (status)
-            {
                 event.target.submit();
-            }
-
-
         }
         /**
          *

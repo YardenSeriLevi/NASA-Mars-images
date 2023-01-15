@@ -19,9 +19,6 @@
 
     /** The DOM */
     document.addEventListener("DOMContentLoaded", function () {
-
-        // document.getElementById("")
-        // addEventListener("change",)
         document.forms['password-form'].addEventListener("submit", function (event) {
 
             validations.validateFormFields(event);
@@ -29,8 +26,6 @@
         });
 
     });
-
-
     /**
      *
      * @type {{validateFormFields: validateFormFields}}
