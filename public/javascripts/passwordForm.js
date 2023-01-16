@@ -41,7 +41,7 @@
             event.preventDefault();
             status = true;
             password = document.getElementById("password").value;
-            confirmPassword = document.getElementById("confirm-password").value;
+            confirmPassword = document.getElementById("confirmpassword").value;
             console.log("in validatePassword")
 
             validatePassword(password,confirmPassword);
@@ -56,12 +56,14 @@
          * @param confirmPassword
          */
         function validatePassword(password,confirmPassword) {
-            const regex = /^[a-zA-Z]+$/;
-            let strongPassword = new RegExp('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{8,})')
+            console.log("in password");
+
+            //let strongPassword = new RegExp('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{8,})')
+            let strongPassword = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/
             let mediumPassword = new RegExp('((?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{6,}))|((?=.*[a-z])(?=.*[A-Z])(?=.*[^A-Za-z0-9])(?=.{8,}))')
 
 
-            if(strongPassword.test(password) && password === confirmPassword)
+            if(strongPassword .test(password) && password === confirmPassword)
             {
                 document.querySelector(".password-error").innerText = "";
                 document.querySelector(".confirm-password-error").innerText = "";

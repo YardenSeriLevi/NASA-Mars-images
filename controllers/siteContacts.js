@@ -103,38 +103,38 @@ exports.postPassword = (req, res, next) => {
  *
  * @param req
  * @param res
- * @param next
  */
-exports.postNasa = (req, res, next) => {
+exports.postNasa = (req, res) => {
     const cookies = new Cookies(req, res, {keys: keys})
+
     const {password, confirmPassword} = req.body;
 
     let userData = cookies.get('data', {signed: true});
     if (userData) {
         let allData = JSON.parse(userData);
-        db.Contact.create({
-            firstName: allData.firstName,
-            lastName: allData.lastName,
-            email: allData.email,
-            password: password
-        }).then();
 
-        // return u.save()
-        //     .then((contact) => res.render('added', {message: "The contact was added successfully!"}))
-        //     .catch((err) => {
-        //         if (err instanceof Sequelize.ValidationError)
-        //             console.log(`validation error ${err}`);
-        //         // one possible error is that the phone is missing, check the model files for more details
-        //         else
-        //             console.log(`other error ${err}`);
-        //
-        //         res.render('added', {message: `input validation error: ${err}`});
-        //     })
-        cookies.set('success', 'You have successfully registered to the site', {signed: true, maxAge: 1000})
-        res.redirect('/login');
-    } else {
-        cookies.set('expired', 'Registration process expired,please start again', {signed: true, maxAge: 1000})
-        res.redirect('/register');
+        if (password === confirmPassword) {
+            db.Contact.create({
+                firstName: allData.firstName,
+                lastName: allData.lastName,
+                email: allData.email,
+                password: password
+            }).then((contact) => {
+                cookies.set('success', 'You have successfully registered to the site', {signed: true, maxAge: 1000})
+                res.redirect('/login')
+            })
+                .catch((err) => {
+                    if (err instanceof Sequelize.ValidationError)
+                        console.log(`validation error ${err}`);
+                    // one possible error is that the phone is missing, check the model files for more details
+                    else
+                        console.log(`other error ${err}`);
+                })
+        } else {
+            cookies.set('expired', 'Registration process expired,please start again', {signed: true, maxAge: 1000})
+            res.redirect('/register');
+        }
+
     }
 
 }

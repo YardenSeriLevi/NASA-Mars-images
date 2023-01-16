@@ -74,7 +74,7 @@
         function validateStr(str, error) {
 
             const regex = /^[a-zA-Z]+$/;
-            if (regex.test(str.trim()) && str.toString().length < STRINGMAXLENGTH && str.toString().length > STRINGMINLENGTH)
+            if (regex.test(str.trim()) && str.toString().length <= STRINGMAXLENGTH && str.toString().length >= STRINGMINLENGTH)
                 document.querySelector(`.${error}`).innerText = "";
             else {
                 document.querySelector(`.${error}`).innerText = `${errorMassage[NAMEERROR]}`;
@@ -86,8 +86,8 @@
          * @param str
          */
         function validateEmail(str) {
-            const regex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-            if (regex.test(str) && str.toString().length < 32 && str.toString().length > 3)
+            const regex =  /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
+            if (regex.test(str) && str.toString().length <= STRINGMAXLENGTH && str.toString().length >= STRINGMINLENGTH)
                 document.querySelector(".email-error").innerText = "";
             else {
                 document.querySelector(".email-error").innerText = `${errorMassage[EMAILERROR]}`;
