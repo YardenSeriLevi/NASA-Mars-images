@@ -1,11 +1,9 @@
-//ולידציה
+
 (function () {
-    let firstName, lastName, email;
     let status = true;
     const STRINGMAXLENGTH = 32;
     const STRINGMINLENGTH = 3;
-    const errorMassage = ["Please match the requested format", "Invalid date format",
-        "incorrect email"];
+    const errorMassage = ["Please match the requested format", "Incorrect email format"];
     const NAMEERROR = 0;
     const EMAILERROR = 1;
 
@@ -74,7 +72,7 @@
         function validateStr(str, error) {
 
             const regex = /^[a-zA-Z]+$/;
-            if (regex.test(str.trim()) && str.toString().length <= STRINGMAXLENGTH && str.toString().length >= STRINGMINLENGTH)
+            if (regex.test(str) && str.toString().length <= STRINGMAXLENGTH && str.toString().length >= STRINGMINLENGTH)
                 document.querySelector(`.${error}`).innerText = "";
             else {
                 document.querySelector(`.${error}`).innerText = `${errorMassage[NAMEERROR]}`;

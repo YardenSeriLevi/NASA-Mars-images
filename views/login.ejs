@@ -3,11 +3,12 @@
 <div class="row bg-light ">
     <div class="d-block" id="login">
         <div class="col-6 offset-3 mb-2 mt-2" style="color:limegreen"> <%=success%> </div>
+        <div class="col-6 offset-3 mb-2 mt-2" style="color:red"> <%=error%> </div>
 
-        <form class="needs-validation" novalidate id="register-form" action="/password" method="post">
+        <form class="needs-validation" novalidate id="register-form" action="/login" method="post">
             <div class="col-6 offset-3 mb-2 mt-2">
                 <div>
-                    <label for="email">Email address :</label>
+                    <label for="email">Email address:</label>
                     <input type="email" id="email" class="form-control" name="email"
                            aria-label="default input example" required >
                     <div class="text-danger mt-2" id="firstNameError"></div>
@@ -16,7 +17,7 @@
             </div>
 
             <div class="col-6 offset-3 mb-2 mt-2">
-                <label>Password</label>
+                <label>Password:</label>
                 <input class="form-control" type="password" name="password" id="password"
                        aria-label="default input example" required >
                 <p class="error password-error"></p>

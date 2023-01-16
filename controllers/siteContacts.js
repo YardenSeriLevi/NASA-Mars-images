@@ -4,38 +4,79 @@ const Cookies = require('cookies')
 const Sequelize = require('sequelize');
 const db = require('../models');
 const keys = ['keyboard cat']
-
 /**
  *
  * @param req
  * @param res
- * @param next
  */
-exports.getLoginPage = (req, res, next) => {
+exports.getLoginPage = (req, res) => {
+
+    if (req.session.login)
+        res.redirect('nasa');
+
     const cookies = new Cookies(req, res, {keys: keys})
+
     const success = cookies.get('success')
+    const error = cookies.get('errorLogin')
 
     if (success) {
-        console.log("in success")
-        res.render('login', {success: success});
-    } else
-        res.render('login', {success: ""});
+        res.render('login', {success: success, error: ""});
+    } else if (error)
+        res.render('login', {success: "", error: error});
+    else {
+        res.render('login', {success: "", error: ""});
+    }
+
 };
+
 /**
  *
  * @param req
  * @param res
- * @param next
  */
-exports.getRegisterPage = (req, res, next) => {
+exports.postLogin = (req, res) => {
+    console.log("im post")
     const cookies = new Cookies(req, res, {keys: keys})
+    const {email, password} = req.body;
+    return db.Contact.findOne({where: {email: email, password: password}}
+    ).then((contact) => {
+        if (contact) {
+            req.session.login = true;
+            res.redirect('nasa');
+        } else {
+            cookies.set('errorLogin', 'The user does not exist, Please register first', {signed: true, maxAge: 1000})
+            res.redirect('login');
+        }
+
+
+        //need to create session
+    })
+        .catch((err) => {
+
+
+        })
+}
+/**
+ *
+ * @param req
+ * @param res
+ */
+exports.getRegisterPage = (req, res) => {
+    const cookies = new Cookies(req, res, {keys: keys});
 
     const error = cookies.get('expired')
+    const emailError = cookies.get('emailExistError')
     let userData = cookies.get('data', {signed: true});
 
     if (error) {
         res.render('register', {error: error});
-    } else if (userData) {
+    } else if(emailError) {
+        res.render('register', {
+            error: emailError
+        });
+    }
+    else if(userData)
+    {
         let allData = JSON.parse(userData);
         res.render('register', {
             firstName: allData.firstName,
@@ -43,27 +84,86 @@ exports.getRegisterPage = (req, res, next) => {
             email: allData.email,
             error: ""
         });
-
-    } else {
+    }
+    else
+    {
         res.render('register', {error: ""});
     }
 };
+
+
 /**
  *
  * @param req
  * @param res
- * @param next
  */
-exports.postLogin = (req, res, next) => {
-    res.render('register', {title: 'Express'});
+exports.postRegister = async (req, res) => {
+    try{
+        const cookies = new Cookies(req, res, {keys: keys})
+        const {firstName, lastName, email} = req.body;
+        const data = {
+            "firstName": firstName,
+            "lastName": lastName,
+            "email": email
+        }
+     const user =   await  db.Contact.findOne({where: {email: email}})
+        console.log(user)
+        if(user)
+        {
+            cookies.set('emailExistError', 'This email already exist, please register with another one', {
+                signed: true,
+                maxAge: 1000
+            })
+            res.redirect('register')
+        }
+        else{
+//need to add user to database ans send redirect to password page
+        }
+
+    }catch(err)  {
+
+
+    }
+
+
+    // db.Contact.findOne({where: {email: email}}
+    // ).then((contact) => {
+    //     cookies.set('emailExistError', 'This email already exist, please register with another one', {
+    //         signed: true,
+    //         maxAge: 1000
+    //     })
+    //     res.redirect('register')
+    //         .catch((err) => {
+    //
+    //
+    //         })
+    // })
+    //
+    //
+    //     console.log(contact)
+    //     if (contact) {
+    //         let userData = cookies.get('data', {signed: true});
+    //         if (userData) {
+    //             res.redirect('password')
+    //         } else {
+    //             cookies.set('data', JSON.stringify(data), {signed: true, maxAge: 30 * 1000})
+    //             res.redirect('password')
+    //         }
+    //     } else {
+    //
+    //     }
+    // })
+
+
+
 }
+
 /**
  *
  * @param req
  * @param res
- * @param next
  */
-exports.getPasswordPage = (req, res, next) => {
+exports.getPasswordPage = (req, res) => {
     const cookies = new Cookies(req, res, {keys: keys})
 
     let userData = cookies.get('data', {signed: true});
@@ -72,39 +172,13 @@ exports.getPasswordPage = (req, res, next) => {
     else
         res.redirect('register');
 }
-/**
- *
- * @param req
- * @param res
- * @param next
- */
-exports.postPassword = (req, res, next) => {
-
-    const {firstName, lastName, email} = req.body;
-    const data = {
-        "firstName": firstName,
-        "lastName": lastName,
-        "email": email
-    }
-
-    const cookies = new Cookies(req, res, {keys: keys})
-
-    let userData = cookies.get('data', {signed: true});
-    if (userData) {
-        let allData = JSON.parse(userData);
-        res.redirect('password')
-    } else {
-        cookies.set('data', JSON.stringify(data), {signed: true, maxAge: 30 * 1000})
-        res.redirect('password')
-    }
-}
 
 /**
  *
  * @param req
  * @param res
  */
-exports.postNasa = (req, res) => {
+exports.postPassword = (req, res) => {
     const cookies = new Cookies(req, res, {keys: keys})
 
     const {password, confirmPassword} = req.body;
@@ -112,14 +186,13 @@ exports.postNasa = (req, res) => {
     let userData = cookies.get('data', {signed: true});
     if (userData) {
         let allData = JSON.parse(userData);
-
         if (password === confirmPassword) {
-            db.Contact.create({
+            return db.Contact.create({
                 firstName: allData.firstName,
                 lastName: allData.lastName,
                 email: allData.email,
                 password: password
-            }).then((contact) => {
+            }).then(() => {
                 cookies.set('success', 'You have successfully registered to the site', {signed: true, maxAge: 1000})
                 res.redirect('/login')
             })
@@ -138,3 +211,15 @@ exports.postNasa = (req, res) => {
     }
 
 }
+
+exports.postNasa = (req, res) => {
+
+    res.redirect('nasa')
+}
+
+exports.getNasa = (req, res) => {
+
+    res.render('nasa')
+}
+
+

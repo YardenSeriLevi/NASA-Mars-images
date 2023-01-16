@@ -1,11 +1,10 @@
-//ולידציה
+
 (function () {
     let password,confirmPassword;
     let status = true;
-    const STRINGMAXLENGTH = 32;
-    const STRINGMINLENGTH = 3;
-    const errorMassage = ["The passwords must be the same", "Invalid date format"]
-    const NAMEERROR = 0;
+    const errorMassage = ["The passwords must be the same", "The password must have: min 1 special character, min 1 number and min 8 characters "]
+    const NOTEQUALPASSWORDS = 0;
+    const NOTSTRONGPASSWORD = 1;
 
 
 
@@ -20,7 +19,6 @@
     /** The DOM */
     document.addEventListener("DOMContentLoaded", function () {
         document.forms['password-form'].addEventListener("submit", function (event) {
-
             validations.validateFormFields(event);
 
         });
@@ -41,8 +39,7 @@
             event.preventDefault();
             status = true;
             password = document.getElementById("password").value;
-            confirmPassword = document.getElementById("confirmpassword").value;
-            console.log("in validatePassword")
+            confirmPassword = document.getElementById("confirmPassword").value;
 
             validatePassword(password,confirmPassword);
             if(status)
@@ -56,22 +53,29 @@
          * @param confirmPassword
          */
         function validatePassword(password,confirmPassword) {
-            console.log("in password");
-
-            //let strongPassword = new RegExp('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{8,})')
-            let strongPassword = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/
-            let mediumPassword = new RegExp('((?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{6,}))|((?=.*[a-z])(?=.*[A-Z])(?=.*[^A-Za-z0-9])(?=.{8,}))')
 
 
-            if(strongPassword .test(password) && password === confirmPassword)
+            let passwordError = document.querySelector(".password-error")
+            let confirmPasswordError = document.querySelector(".confirm-password-error")
+
+            const regex =  /^(?=.*\d)(?=.*[#$@!%&*?])[A-Za-z\d#$@!%&*?]{8,}$/
+            // if (regex.test(password) && password === confirmPassword)
+            if (password === confirmPassword)
             {
-                document.querySelector(".password-error").innerText = "";
-                document.querySelector(".confirm-password-error").innerText = "";
+                passwordError.innerText = "";
+                confirmPasswordError.innerText = "";
             }
 
-            else if(password !== confirmPassword)
+            else if(password !== confirmPassword  )
             {
-                document.querySelector(".confirm-password-error").innerText = "password must be the same";
+                passwordError.innerText = "";
+                confirmPasswordError.innerText = errorMassage[NOTEQUALPASSWORDS];
+                status = false;
+            }
+            else
+            {
+                confirmPasswordError.innerText = "";
+                passwordError.innerText = errorMassage[NOTSTRONGPASSWORD];
                 status = false;
             }
         }
