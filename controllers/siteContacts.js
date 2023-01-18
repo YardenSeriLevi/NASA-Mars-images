@@ -11,21 +11,23 @@ const keys = ['keyboard cat']
  */
 exports.getLoginPage = (req, res) => {
 
-    if (req.session.login)
-        res.redirect('nasa');
-
     const cookies = new Cookies(req, res, {keys: keys})
 
     const success = cookies.get('success')
     const error = cookies.get('errorLogin')
 
-    if (success) {
+    if (success)
         res.render('login', {success: success, error: ""});
-    } else if (error)
+    else if (error)
         res.render('login', {success: "", error: error});
-    else {
-        res.render('login', {success: "", error: ""});
+    else if (req.session.login)
+    {
+        cookies.set('userName', )
+        res.redirect('nasa');
     }
+
+    else
+        res.render('login', {success: "", error: ""});
 
 };
 
@@ -35,7 +37,6 @@ exports.getLoginPage = (req, res) => {
  * @param res
  */
 exports.postLogin = (req, res) => {
-    console.log("im post")
     const cookies = new Cookies(req, res, {keys: keys})
     const {email, password} = req.body;
     return db.Contact.findOne({where: {email: email, password: password}}
@@ -52,8 +53,6 @@ exports.postLogin = (req, res) => {
         //need to create session
     })
         .catch((err) => {
-
-
         })
 }
 /**
@@ -70,13 +69,11 @@ exports.getRegisterPage = (req, res) => {
 
     if (error) {
         res.render('register', {error: error});
-    } else if(emailError) {
+    } else if (emailError) {
         res.render('register', {
             error: emailError
         });
-    }
-    else if(userData)
-    {
+    } else if (userData) {
         let allData = JSON.parse(userData);
         res.render('register', {
             firstName: allData.firstName,
@@ -84,9 +81,7 @@ exports.getRegisterPage = (req, res) => {
             email: allData.email,
             error: ""
         });
-    }
-    else
-    {
+    } else {
         res.render('register', {error: ""});
     }
 };
@@ -98,7 +93,7 @@ exports.getRegisterPage = (req, res) => {
  * @param res
  */
 exports.postRegister = async (req, res) => {
-    try{
+    try {
         const cookies = new Cookies(req, res, {keys: keys})
         const {firstName, lastName, email} = req.body;
         const data = {
@@ -106,56 +101,24 @@ exports.postRegister = async (req, res) => {
             "lastName": lastName,
             "email": email
         }
-     const user =   await  db.Contact.findOne({where: {email: email}})
-        console.log(user)
-        if(user)
-        {
+
+        const user = await db.Contact.findOne({where: {email: email}})
+        if (user) {
             cookies.set('emailExistError', 'This email already exist, please register with another one', {
                 signed: true,
                 maxAge: 1000
             })
             res.redirect('register')
-        }
-        else{
+        } else {
+            cookies.set('data', JSON.stringify(data), {signed: true, maxAge: 30 * 1000})
+            res.redirect('password')
 //need to add user to database ans send redirect to password page
         }
 
-    }catch(err)  {
+    } catch (err) {
 
 
     }
-
-
-    // db.Contact.findOne({where: {email: email}}
-    // ).then((contact) => {
-    //     cookies.set('emailExistError', 'This email already exist, please register with another one', {
-    //         signed: true,
-    //         maxAge: 1000
-    //     })
-    //     res.redirect('register')
-    //         .catch((err) => {
-    //
-    //
-    //         })
-    // })
-    //
-    //
-    //     console.log(contact)
-    //     if (contact) {
-    //         let userData = cookies.get('data', {signed: true});
-    //         if (userData) {
-    //             res.redirect('password')
-    //         } else {
-    //             cookies.set('data', JSON.stringify(data), {signed: true, maxAge: 30 * 1000})
-    //             res.redirect('password')
-    //         }
-    //     } else {
-    //
-    //     }
-    // })
-
-
-
 }
 
 /**
@@ -212,14 +175,6 @@ exports.postPassword = (req, res) => {
 
 }
 
-exports.postNasa = (req, res) => {
 
-    res.redirect('nasa')
-}
-
-exports.getNasa = (req, res) => {
-
-    res.render('nasa')
-}
 
 

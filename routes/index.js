@@ -4,6 +4,7 @@ const express = require('express');
 
 // load the controllers
 const siteContactsController = require('../controllers/siteContacts');
+const nasaController = require('../controllers/nasaContrroler');
 
 const router = express.Router();
 
@@ -23,7 +24,7 @@ router.post('/password',siteContactsController.postPassword)
 
 
 
-router.get('/nasa',siteContactsController.getNasa)
-router.post('/nasa',siteContactsController.postNasa)
+router.get('/nasa',nasaController.getNasa)
+router.post('/nasa',nasaController.postNasa)
 
 module.exports = router;

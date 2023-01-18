@@ -1,1 +1,39 @@
-im here !!!!!!!!
+<%- include('includes/nasaHeadPage.ejs') %>
+
+<div class="row bg-light ">
+    <div class="col-3 ">
+        <button type="button" id="backButton" class="btn btn-outline-primary">log out</button>
+    </div>
+    <form class="needs-validation" novalidate id="date-form" action="/login" method="post">
+        <div class="col-4 ">
+            <label>Get picture/video from date:</label>
+            <input class="form-control" type="date" id="currDate"
+                   aria-label="default input example"
+                   min="1900-01-01" max="2023-12-31">
+            <br>
+            <button type="submit" id="date" class = "btn btn-outline-primary">submit</button>
+        </div>
+
+        <p style="color:red" class="error date-error"></p>
+    </form>
+
+
+    <div id="elements"></div>
+    <p class="error server-error"></p>
+    <div class="col-3">
+        <button type="submit" id="more" class = "btn btn-outline-primary">More</button>
+        <button type="button" id="backButton" class = "btn btn-outline-primary d-none">Back</button>
+    </div>
+
+</div>
+
+
+</div>
+
+<script src="javascripts/nasa.js">
+    <%- include('includes/endPage.ejs') %>
+
+
+
+
+
