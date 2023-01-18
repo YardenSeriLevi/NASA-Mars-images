@@ -20,13 +20,10 @@ exports.getLoginPage = (req, res) => {
         res.render('login', {success: success, error: ""});
     else if (error)
         res.render('login', {success: "", error: error});
-    else if (req.session.login)
-    {
-        cookies.set('userName', )
+    else if (req.session.login) {
+        cookies.set('userName',)
         res.redirect('nasa');
-    }
-
-    else
+    } else
         res.render('login', {success: "", error: ""});
 
 };
@@ -36,24 +33,32 @@ exports.getLoginPage = (req, res) => {
  * @param req
  * @param res
  */
-exports.postLogin = (req, res) => {
+exports.postLogin = async (req, res) => {
     const cookies = new Cookies(req, res, {keys: keys})
     const {email, password} = req.body;
-    return db.Contact.findOne({where: {email: email, password: password}}
-    ).then((contact) => {
-        if (contact) {
-            req.session.login = true;
-            res.redirect('nasa');
-        } else {
-            cookies.set('errorLogin', 'The user does not exist, Please register first', {signed: true, maxAge: 1000})
-            res.redirect('login');
-        }
-
-
-        //need to create session
-    })
-        .catch((err) => {
-        })
+    // return db.Contact.findOne({where: {email: email, password: password}}
+    // ).then((contact) => {
+    //     if (contact) {
+    //         console.log(contact.toJSON + "user name:" +contact.userName.toJSON)
+    //         req.session.login = true;
+    //         req.session.userName = contact.userName;
+    //         res.redirect('nasa');
+    //     } else {
+    //         cookies.set('errorLogin', 'The user does not exist, Please register first', {signed: true, maxAge: 1000})
+    //         res.redirect('login');
+    //     }
+    // })
+    //     .catch((err) => {
+    //     })
+    const user = await db.Contact.findOne({where:  {email: email, password: password}});
+    if (user !== null) {
+        req.session.login = true;
+        req.session.userName = user.firstName;
+        res.redirect('nasa');
+    } else {
+        cookies.set('errorLogin', 'The user does not exist, Please register first', {signed: true, maxAge: 1000})
+        res.redirect('login');
+    }
 }
 /**
  *

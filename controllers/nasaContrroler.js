@@ -15,7 +15,11 @@ exports.getNasa = (req, res) => {
     const cookies = new Cookies(req, res, {keys: keys})
 
     if (req.session.login)
-        res.render('nasa',userName:)
+    {
+        console.log(req.session.userName)
+        res.render('nasa',{userName:req.session.userName})
+
+    }
 }
 
 exports.postNasa = (req, res) => {
