@@ -1,7 +1,8 @@
 (function () {
     let sPicDate = new Date; //Start date of displaying the images
     let ePicDate; //End date of displaying the images
-    let firstTime = true;
+    let userName;
+    let numOfPicturs ;
     const NUMOFDAYS = 2;
     const errorMassage = ["Please match the requested format", "Invalid date format",
         "It seems there are communication problems with the server",
@@ -21,7 +22,6 @@
     function toggleElement(elm) {
         document.getElementById(`${elm}`).classList.toggle("d-none");
     }
-
 
     /**
      *
@@ -90,6 +90,9 @@
          * @param error
          */
         function toHandleError(error) {
+            if (document.getElementById("more").getAttribute("class") !== "d-none") {
+                toggleElement("more");
+            }
             document.querySelector(".date-error").innerText = `status:${error}, ${errorMassage[NASAERROR]},`;
         }
 
@@ -101,12 +104,6 @@
          * @returns {Promise<void>}
          */
         function displayWeb(obj) {
-            if (firstTime) {
-                toggleElement("mainPage");
-                toggleElement("display");
-                document.querySelector("#elements").innerText = "";
-            }
-
             for (let i = obj.length - 1; i >= 0; i--) {
                 let date = obj[i]["date"];
                 let explanation = obj[i]["explanation"]
@@ -115,13 +112,11 @@
                 let picUrl = obj[i]["url"];
                 let picCopyright = obj[i]["copyright"];
                 createElements.createPicElements(date, explanation, title, picCopyright, type, picUrl);
-
-                if (i === 0) {
-                    if (firstTime) {
-                        firstTime = false;
-                    }
-                }
+                numOfPicturs ++;
             }
+            if(numOfPicturs === 3)
+                toggleElement("more");
+
         }
 
         function setDates() {
@@ -376,7 +371,7 @@
                 if (document.getElementById(`cLabel${date}`).getAttribute("class") !== "d-none") {
                     showComments(date);
                     //Update the page every 15 seconds
-                    setInterval(() => showComments(date), UPDATETIME);
+                    // setInterval(() => showComments(date), UPDATETIME);
                 }
             });
         }
@@ -436,26 +431,23 @@
 
         /** The DOM */
         document.addEventListener("DOMContentLoaded", function () {
-            console.log("DOM Loaded");
-            document.forms['register-form'].addEventListener("submit", function (event) {
+            document.forms['date-form'].addEventListener("submit", function (event) {
 
                 event.preventDefault();
-                validations.validateFormFields();
-
-            });
-
-            document.getElementById("date").addEventListener("click", (event) => {
-                ePicDate =document.getElementById("currDate").value;
+                ePicDate = document.getElementById("currDate").value;
                 validations.validateDate();
+                if (document.getElementById("more").getAttribute("class") !== "d-none")
+                    toggleElement("more");
                 if (document.querySelector(".date-error").innerText === "")
+                {
+                    document.querySelector("#elements").innerText = "";
+                    numOfPicturs = 0;
                     display.getPicFromNasa();
+                }
+
+
             });
 
-            document.getElementById("backButton").addEventListener("click", (event) => {
-                firstTime = true;
-                toggleElement("display");
-                toggleElement("login");
-            });
 
             document.getElementById("more").addEventListener("click", (event) => {
                 display.setDates();
@@ -467,7 +459,6 @@
         return {
             createPicElements: createPicElements,
             presentComments: presentComments
-
         }
     }();
 

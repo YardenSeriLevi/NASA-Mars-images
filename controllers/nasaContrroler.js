@@ -5,6 +5,18 @@ const Sequelize = require('sequelize');
 const db = require('../models');
 const keys = ['keyboard cat']
 
+
+/**
+ *
+ * @param req
+ * @param res
+ */
+exports.getLogOutPage = (req, res) => {
+
+    req.session.login = false;
+    res.redirect('/login')
+};
+
 /**
  *
  * @param req
@@ -12,12 +24,16 @@ const keys = ['keyboard cat']
  */
 exports.getNasa = (req, res) => {
 
-    const cookies = new Cookies(req, res, {keys: keys})
-
     if (req.session.login)
     {
-        console.log(req.session.userName)
+        console.log("in nasa")
         res.render('nasa',{userName:req.session.userName})
+
+    }
+    else
+    {
+        console.log("in else")
+        res.redirect('/login')
 
     }
 }

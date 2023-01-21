@@ -23,6 +23,7 @@ router.get('/password',siteContactsController.getPasswordPage)
 router.post('/password',siteContactsController.postPassword)
 
 
+router.get('/logOut',nasaController.getLogOutPage)
 
 router.get('/nasa',nasaController.getNasa)
 router.post('/nasa',nasaController.postNasa)

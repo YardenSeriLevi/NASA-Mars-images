@@ -10,7 +10,8 @@
 </div>
 <div class="row bg-light ">
     <div class="col-3 ">
-        <button type="button" id="backButton" class="btn btn-outline-primary">log out</button>
+        <a class="btn btn-outline-primary" href="/logOut" role="button">log out</a></h6>
+<!--        <button type="button" id="backButton" class="btn btn-outline-primary">log out</button>-->
     </div>
     <form class="needs-validation" novalidate id="date-form" action="/login" method="post">
         <div class="col-4 ">
@@ -29,8 +30,8 @@
     <div id="elements"></div>
     <p class="error server-error"></p>
     <div class="col-3">
-        <button type="submit" id="more" class="btn btn-outline-primary">More</button>
-        <button type="button" id="backButton" class="btn btn-outline-primary d-none">Back</button>
+        <button type="submit" id="more" class="btn btn-outline-primary d-none">More</button>
+
     </div>
 
 </div>
@@ -39,7 +40,7 @@
 </div>
 
 
-<!--<script src="javascripts/nasa.js">-->
+<script src="javascripts/nasa.js">
 <%- include('includes/endPage.ejs') %>
 
 

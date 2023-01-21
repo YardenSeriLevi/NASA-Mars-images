@@ -50,7 +50,7 @@ exports.postLogin = async (req, res) => {
     // })
     //     .catch((err) => {
     //     })
-    const user = await db.Contact.findOne({where:  {email: email, password: password}});
+    const user = await db.Contact.findOne({where: {email: email, password: password}});
     if (user !== null) {
         req.session.login = true;
         req.session.userName = user.firstName;
@@ -179,7 +179,6 @@ exports.postPassword = (req, res) => {
     }
 
 }
-
 
 
 
