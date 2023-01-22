@@ -26,13 +26,11 @@ exports.getNasa = (req, res) => {
 
     if (req.session.login)
     {
-        console.log("in nasa")
         res.render('nasa',{userName:req.session.userName})
 
     }
     else
     {
-        console.log("in else")
         res.redirect('/login')
 
     }

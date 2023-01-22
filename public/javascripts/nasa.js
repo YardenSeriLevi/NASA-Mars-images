@@ -2,7 +2,7 @@
     let sPicDate = new Date; //Start date of displaying the images
     let ePicDate; //End date of displaying the images
     let userName;
-    let numOfPicturs ;
+    let numOfPicturs;
     const NUMOFDAYS = 2;
     const errorMassage = ["Please match the requested format", "Invalid date format",
         "It seems there are communication problems with the server",
@@ -12,6 +12,7 @@
     const SERVERERROR = 2;
     const NASAERROR = 3;
     const APIKEY = "b6IndMxrOlZml8AHgoRDk7mOqUTN0fAyNNxrhGMy";
+
     //const UPDATETIME = 15000;
 
 
@@ -112,9 +113,9 @@
                 let picUrl = obj[i]["url"];
                 let picCopyright = obj[i]["copyright"];
                 createElements.createPicElements(date, explanation, title, picCopyright, type, picUrl);
-                numOfPicturs ++;
+                numOfPicturs++;
             }
-            if(numOfPicturs === 3)
+            if (numOfPicturs === 3)
                 toggleElement("more");
 
         }
@@ -136,6 +137,7 @@
 
     const createElements = function () {
         let currComment;
+
         /**
          * Creating the HTML elements
          * @param date: the date of the picture
@@ -316,9 +318,11 @@
             document.getElementById(`button${date}`).addEventListener("click", (event) => {
                     currComment = document.getElementById(`c${date}`).value;
                     document.querySelector(`#c${date}`).value = "";
+
+                userName = document.getElementById("userName").value;
                     const comment = {
                         "date": date,
-                        "user": username,
+                        "user": userName,
                         "txt": currComment
                     }
 
@@ -405,12 +409,12 @@
                 textP.textContent = comment.comment + " ";
                 commentDiv.appendChild(textP);
 
-                if (comment.userName === username) {
+                if (comment.userName === userName) {
                     const deleteButton = createButton(comment.date, "Delete", `button${comment.id}`)
                     deleteButton.addEventListener('click', () => {
                         const params = {
                             "date": comment.date,
-                            "id": comment.id,
+                            "id": comment.identity,
                         }
                         const options = {
                             method: 'DELETE',
@@ -438,8 +442,7 @@
                 validations.validateDate();
                 if (document.getElementById("more").getAttribute("class") !== "d-none")
                     toggleElement("more");
-                if (document.querySelector(".date-error").innerText === "")
-                {
+                if (document.querySelector(".date-error").innerText === "") {
                     document.querySelector("#elements").innerText = "";
                     numOfPicturs = 0;
                     display.getPicFromNasa();
@@ -506,6 +509,7 @@
                 .then((data) => console.log(data));
 
         }
+
         return {
             getMethod: getMethod,
             postMethod: postMethod,
