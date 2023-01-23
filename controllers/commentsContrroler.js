@@ -21,10 +21,12 @@ const keys = ['keyboard cat']
  */
 exports.getComments = async(req, res) => {
 
-    const { currDate} = req.query;
+    const { date} = req.query;
+    const commentList = await db.Comment.findAll({
+                    where: {date: date},
+                    include: [ {
+                        model: Contact, attributes: ['firstName', 'lastName'] } ]} )
 
-    // const user = await db.Contact.findOne({where: {email: email, password: password}});
-    const commentList = await db.Comments.findAll({where: {date: currDate}});
     //res.setHeader('Content-Type', 'application/json');
         // res.json(commentList);
     if (commentList !== null) {
@@ -32,7 +34,9 @@ exports.getComments = async(req, res) => {
         res.json(commentList);
     }
     else {
-        console.log("in else get ")
+        res.setHeader('Content-Type', 'application/json');
+        res.json(commentList);
+
     }
 
     // const list = db.getComment()
@@ -58,13 +62,14 @@ exports.getComments = async(req, res) => {
  */
 exports.postComment = async(req, res) => {
     const { date, user,txt } = req.body;
-    const commentList = await db.Comments.findAll({where: {date: date}});
+    const commentList = await db.Comment.findAll({where: {date: date}});
     const newId = commentList.length + 1;
 
-    return db.Comments.create({
+    return db.Comment.create({
         identity: newId,
         date: date,
-        userName: user,
+        //userName: user,
+        user_id: req.session.user_id,
         comment: txt
     }).then(() => {
         res.json("good job")
@@ -88,7 +93,7 @@ exports.postComment = async(req, res) => {
 exports.deleteComment = async (req, res) => {
     const {date, id} = req.body;
 
-    const del = await db.Comments.destroy({where: { date: date,identity:id }});
+    const del = await db.Comment.destroy({where: { date: date,identity:id }});
 
    if(del)
        res.json("good job")

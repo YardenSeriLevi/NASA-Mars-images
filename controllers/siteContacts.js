@@ -54,6 +54,8 @@ exports.postLogin = async (req, res) => {
     if (user !== null) {
         req.session.login = true;
         req.session.userName = user.firstName;
+        req.session.user_id  = user.user_id;
+        req.session.lastName = user.lastName;
         res.redirect('nasa');
     } else {
         cookies.set('errorLogin', 'The user does not exist, Please register first', {signed: true, maxAge: 1000})
