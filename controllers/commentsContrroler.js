@@ -24,8 +24,11 @@ exports.getComments = async(req, res) => {
     const { date} = req.query;
     const commentList = await db.Comment.findAll({
                     where: {date: date},
-                    include: [ {
-                        model: Contact, attributes: ['firstName', 'lastName'] } ]} )
+                    include: [{
+                      model:  db.Contact,
+                        attributes: ['firstName', 'lastName']
+                    }]
+                    });
 
     //res.setHeader('Content-Type', 'application/json');
         // res.json(commentList);

@@ -10,22 +10,22 @@ const router = express.Router();
 
 router.get('/',siteContactsController.getLoginPage)
 
-router.get('/login',siteContactsController.getLoginPage)
+router.route('/login')
+    .get(siteContactsController.getLoginPage)
+    .post(siteContactsController.postLogin)
 
-router.post('/login',siteContactsController.postLogin)
+router.route('/register')
+    .get(siteContactsController.getRegisterPage)
+    .post(siteContactsController.postRegister)
 
-router.get('/register',siteContactsController.getRegisterPage)
-
-router.post('/register',siteContactsController.postRegister)
-
-router.get('/password',siteContactsController.getPasswordPage)
-
-router.post('/password',siteContactsController.postPassword)
-
+router.route('/password')
+    .get(siteContactsController.getPasswordPage)
+    .post(siteContactsController.postPassword)
 
 router.get('/logOut',nasaController.getLogOutPage)
 
-router.get('/nasa',nasaController.getNasa)
-router.post('/nasa',nasaController.postNasa)
+router.route('/nasa')
+    .get(nasaController.getNasa)
+    .post(nasaController.postNasa)
 
 module.exports = router;

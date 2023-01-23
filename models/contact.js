@@ -17,6 +17,7 @@ module.exports = (sequelize, DataTypes) => {
       })
     }
   }
+
   Contact.init({
     firstName: DataTypes.STRING,
     lastName: DataTypes.STRING,
