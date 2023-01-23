@@ -13,7 +13,7 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false
       },
-      identify: {
+      identity: {
         type: Sequelize.STRING
       },
       comment: {

@@ -26,18 +26,15 @@ exports.getNasa = (req, res) => {
 
     if (req.session.login)
     {
-        res.render('nasa',{userName:req.session.userName})
-
+        res.render('nasa',{userName:req.session.firstName+" " +req.session.lastName,userId:req.session.user_id })
     }
     else
     {
         res.redirect('/login')
-
     }
 }
 
 exports.postNasa = (req, res) => {
-
     res.redirect('nasa')
 }
 

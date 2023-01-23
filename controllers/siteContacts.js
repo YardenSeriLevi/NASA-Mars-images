@@ -53,8 +53,8 @@ exports.postLogin = async (req, res) => {
     const user = await db.Contact.findOne({where: {email: email, password: password}});
     if (user !== null) {
         req.session.login = true;
-        req.session.userName = user.firstName;
-        req.session.user_id  = user.user_id;
+        req.session.firstName = user.firstName;
+        req.session.user_id  = user.id;
         req.session.lastName = user.lastName;
         res.redirect('nasa');
     } else {
@@ -119,7 +119,7 @@ exports.postRegister = async (req, res) => {
         } else {
             cookies.set('data', JSON.stringify(data), {signed: true, maxAge: 30 * 1000})
             res.redirect('password')
-//need to add user to database ans send redirect to password page
+//need to add user to database and send redirect to password page
         }
 
     } catch (err) {

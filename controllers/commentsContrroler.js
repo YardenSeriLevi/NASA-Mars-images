@@ -5,14 +5,6 @@ const Sequelize = require('sequelize');
 const db = require('../models');
 const keys = ['keyboard cat']
 
-// const bodyParser = require('body-parser');
-//
-// router.use(bodyParser.json());
-
-// 'use strict';
-
-// this is how we use the Contact class from models
-// const Comment = require('../models/comments.js');
 
 /**
  *
@@ -21,7 +13,7 @@ const keys = ['keyboard cat']
  */
 exports.getComments = async(req, res) => {
 
-    const { date} = req.query;
+    const {date} = req.query;
     const commentList = await db.Comment.findAll({
                     where: {date: date},
                     include: [{
@@ -30,8 +22,6 @@ exports.getComments = async(req, res) => {
                     }]
                     });
 
-    //res.setHeader('Content-Type', 'application/json');
-        // res.json(commentList);
     if (commentList !== null) {
         res.setHeader('Content-Type', 'application/json');
         res.json(commentList);
@@ -64,23 +54,22 @@ exports.getComments = async(req, res) => {
  * @param res
  */
 exports.postComment = async(req, res) => {
-    const { date, user,txt } = req.body;
+    let { date,txt } = req.body;
     const commentList = await db.Comment.findAll({where: {date: date}});
     const newId = commentList.length + 1;
 
     return db.Comment.create({
-        identity: newId,
-        date: date,
-        //userName: user,
         user_id: req.session.user_id,
-        comment: txt
+        identity: newId,
+        comment: txt,
+        date: date
     }).then(() => {
+        console.log(`Good Job`)
         res.json("good job")
     })
         .catch((err) => {
             if (err instanceof Sequelize.ValidationError)
-                console.log(`couldent add the new comment to the database ${err}`);
-            // one possible error is that the phone is missing, check the model files for more details
+                console.log(`Can not add the new comment to the database ${err} ${err.message}`);
             else
                 console.log(`other error ${err}`);
         })

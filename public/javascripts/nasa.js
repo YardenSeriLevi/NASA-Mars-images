@@ -1,7 +1,8 @@
+
 (function () {
+
     let sPicDate = new Date; //Start date of displaying the images
     let ePicDate; //End date of displaying the images
-    let userName;
     let numOfPicturs;
     const NUMOFDAYS = 2;
     const errorMassage = ["Please match the requested format", "Invalid date format",
@@ -12,6 +13,9 @@
     const SERVERERROR = 2;
     const NASAERROR = 3;
     const APIKEY = "b6IndMxrOlZml8AHgoRDk7mOqUTN0fAyNNxrhGMy";
+    const MINCOMMENTLEN = 0;
+    const MAXCOMMENTLEN = 128;
+
 
     //const UPDATETIME = 15000;
 
@@ -76,6 +80,7 @@
         /** A function that receives the image or video from the NASA API
          */
         function getPicFromNasa() {
+            toggleElement("loadingGif");
             fetch(`https://api.nasa.gov/planetary/apod?api_key=${APIKEY}&start_date=${sPicDate}&end_date=${ePicDate}`)
                 .then(function (res) {
                     if (!res.ok)
@@ -83,7 +88,8 @@
                     return res.json()
                 })
                 .then(display.displayWeb)
-                .catch(error => toHandleError(error));
+                .catch(error => toHandleError(error))
+                .finally(()=> toggleElement("loadingGif"));;
         }
 
         /**
@@ -198,7 +204,7 @@
             document.getElementById(`${date}`).addEventListener("click", (event) => {
                 toggleElement(`ex${date}`);
             });
-
+            // userName = document.getElementById("userName").value;
             col2SixthRow.appendChild(createAllCommentsLabel(date));
             col2SixthRow.appendChild(commentLabel(date));
             toGetComment(date);
@@ -319,10 +325,8 @@
                     currComment = document.getElementById(`c${date}`).value;
                     document.querySelector(`#c${date}`).value = "";
 
-                userName = document.getElementById("userName").value;
                     const comment = {
                         "date": date,
-                        "user": userName,
                         "txt": currComment
                     }
 
@@ -334,8 +338,12 @@
                         }
                     };
 
-                    connectingToOurServer.postMethod(options);
-                    showComments(date);
+                    if(`${currComment}`.length > MINCOMMENTLEN && `${currComment}`.length <= MAXCOMMENTLEN )
+                    {
+                        connectingToOurServer.postMethod(options);
+                        showComments(date);
+                    }
+
                 }
             )
         }
@@ -398,19 +406,21 @@
          */
         function presentComments(comments) {
             comments.forEach((comment) => {
+                let name = comment.Contact.firstName+ " " +comment.Contact.lastName;
                 const commentDiv = document.createElement('div');
                 commentDiv.setAttribute("class", 'bg-light')
 
                 const userSpan = document.createElement('b');
-                userSpan.textContent = comment.userName + ":";
+                userSpan.textContent = name + ":";
                 commentDiv.appendChild(userSpan);
 
                 const textP = document.createElement('p');
                 textP.textContent = comment.comment + " ";
                 commentDiv.appendChild(textP);
 
-                if (comment.userName === userName) {
-                    const deleteButton = createButton(comment.date, "Delete", `button${comment.id}`)
+                let userId = document.getElementById("userId").value ;
+                if (comment.user_id.toString() === userId ) {
+                    const deleteButton = createButton(comment.date, "Delete", `button${comment.identity}`)
                     deleteButton.addEventListener('click', () => {
                         const params = {
                             "date": comment.date,
@@ -432,7 +442,16 @@
             })
         }
 
-
+        // async function findName(userId) {
+        //     const userName = await Contact.findOne({where: {id: userId}});
+        //     if (userName !== null) {
+        //         return (userName.firstName);
+        //     } else {
+        //             console.log("dataBase error");
+        //         //check which error relevant here ;
+        //     }
+        //     return("");
+        // }
         /** The DOM */
         document.addEventListener("DOMContentLoaded", function () {
             document.forms['date-form'].addEventListener("submit", function (event) {
@@ -471,11 +490,13 @@
      * @type {{postMethod: postMethod, getMethod: getMethod, deleteMethod: deleteMethod}}
      */
     const connectingToOurServer = function () {
+
         /**
          * GET function
          * @param params
          */
         function getMethod(params) {
+            toggleElement("loadingGif");
             const queryString = new URLSearchParams(params).toString();
             fetch(`/api/comment/?${queryString}`)
                 .then(function (res) {
@@ -487,16 +508,23 @@
                 .catch(function (error) {
                     document.querySelector(`#error${date}`).innerText = errorMassage[SERVERERROR];
                 })
-        }
+                .finally(()=> toggleElement("loadingGif"))
+        };
 
         /**
          * POST function
          * @param options
          */
         function postMethod(options) {
+            toggleElement("loadingGif");
             fetch('/api/comment', options)
                 .then((response) => response.json())
-                .then((data) => console.log(data));
+                .then((data) => console.log(data))
+                .catch(function(err) {
+                // print the error details
+                console.log(err);
+            })
+                .finally(()=> toggleElement("loadingGif"));
         }
 
         /**
@@ -504,9 +532,11 @@
          * @param options
          */
         function deleteMethod(options) {
+            toggleElement("loadingGif");
             fetch('/api/comment', options)
                 .then((response) => response.json())
-                .then((data) => console.log(data));
+                .then((data) => console.log(data))
+                .finally(()=> toggleElement("loadingGif"));
 
         }
 

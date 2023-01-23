@@ -11,7 +11,6 @@
 <div class="row bg-light ">
     <div class="col-3 ">
         <a class="btn btn-outline-primary" href="/logOut" role="button">log out</a></h6>
-<!--        <button type="button" id="backButton" class="btn btn-outline-primary">log out</button>-->
     </div>
     <form class="needs-validation" novalidate id="date-form" action="/login" method="post">
         <div class="col-4 ">
@@ -20,7 +19,11 @@
                    aria-label="default input example"
                    min="1900-01-01" max="2023-12-31">
             <input type="hidden" id="userName"  value= <%= userName %> />
+            <input type="hidden" id="userId"  value= <%= userId %> />
             <br>
+            <div class="spinner-border text-secondary d-none" role="status" id = "loadingGif">
+                <span class="sr-only"></span>
+            </div>
             <button type="submit" id="date" class="btn btn-outline-primary">submit</button>
         </div>
 
