@@ -4,7 +4,7 @@
     let sPicDate = new Date; //Start date of displaying the images
     let ePicDate; //End date of displaying the images
     let numOfPicturs;
-    const NUMOFDAYS = 2;
+    const NUMOFDAYS = 2; //A minimum of 3 images are shown in page
     const errorMassage = ["Please match the requested format", "Invalid date format",
         "It seems there are communication problems with the server",
         "It seems that something went wrong in communication with NASA or that NASA still does not have a photo from this date"];
@@ -15,10 +15,7 @@
     const APIKEY = "b6IndMxrOlZml8AHgoRDk7mOqUTN0fAyNNxrhGMy";
     const MINCOMMENTLEN = 0;
     const MAXCOMMENTLEN = 128;
-
-
     //const UPDATETIME = 15000;
-
 
     /** A function that receives the elements and activates a toggle on them.
      * from d-nones, the elements become nones
@@ -29,7 +26,7 @@
     }
 
     /**
-     *
+     * A function that checks the correctness of input entered by the user
      * @type {{displayDate: (function(*, *): string), validateDate: validateDate}}
      */
     const validations = function () {
@@ -143,7 +140,6 @@
 
     const createElements = function () {
         let currComment;
-
         /**
          * Creating the HTML elements
          * @param date: the date of the picture
@@ -204,7 +200,7 @@
             document.getElementById(`${date}`).addEventListener("click", (event) => {
                 toggleElement(`ex${date}`);
             });
-            // userName = document.getElementById("userName").value;
+
             col2SixthRow.appendChild(createAllCommentsLabel(date));
             col2SixthRow.appendChild(commentLabel(date));
             toGetComment(date);
@@ -442,16 +438,6 @@
             })
         }
 
-        // async function findName(userId) {
-        //     const userName = await Contact.findOne({where: {id: userId}});
-        //     if (userName !== null) {
-        //         return (userName.firstName);
-        //     } else {
-        //             console.log("dataBase error");
-        //         //check which error relevant here ;
-        //     }
-        //     return("");
-        // }
         /** The DOM */
         document.addEventListener("DOMContentLoaded", function () {
             document.forms['date-form'].addEventListener("submit", function (event) {
@@ -466,10 +452,7 @@
                     numOfPicturs = 0;
                     display.getPicFromNasa();
                 }
-
-
             });
-
 
             document.getElementById("more").addEventListener("click", (event) => {
                 display.setDates();
@@ -490,7 +473,6 @@
      * @type {{postComment: postComment, getComment: getComment, deleteComment: deleteComment}}
      */
     const connectingToOurServer = function () {
-
         /**
          * GET function
          * @param params
@@ -509,7 +491,7 @@
                     document.querySelector(`#error${date}`).innerText = errorMassage[SERVERERROR];
                 })
                 .finally(()=> toggleElement("loadingGif"))
-        };
+        }
 
         /**
          * POST function

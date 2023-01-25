@@ -1,7 +1,6 @@
 
 const express = require('express');
 
-
 // load the controllers
 const comentsContrroler = require('../controllers/commentsContrroler');
 

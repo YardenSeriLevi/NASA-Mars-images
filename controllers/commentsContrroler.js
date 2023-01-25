@@ -7,12 +7,11 @@ const keys = ['keyboard cat']
 
 
 /**
- *
+ * To get the comments from the database
  * @param req
  * @param res
  */
 exports.getComments = async(req, res) => {
-
     const {date} = req.query;
     const commentList = await db.Comment.findAll({
                     where: {date: date},
@@ -29,38 +28,63 @@ exports.getComments = async(req, res) => {
     else {
         res.setHeader('Content-Type', 'application/json');
         res.json(commentList);
-
     }
+
+    // const list = db.getComment()
+    // const filteredList = list.filter((comment) => comment.date === date);
+    // res.status(200);
+    // res.setHeader('Content-Type', 'application/json');
+    // res.json(filteredList);
 };
+
+// router.get('/comment', (req, res) => {
+//     const { date} = req.query;
+//     const list = dbList.getComment()
+//     const filteredList = list.filter((comment) => comment.date === date);
+//     res.status(200);
+//     res.setHeader('Content-Type', 'application/json');
+//     res.json(filteredList);
+// });
+
 /**
- *
+ * To post the comments to the database
  * @param req
  * @param res
  */
 exports.postComment = async(req, res) => {
     let { date,txt } = req.body;
-    // const commentList = await db.Comment.findAll({where: {date: date}});
+    const commentList = await db.Comment.findAll({where: {date: date}});
+    const newId = commentList.length + 1;
 
     return db.Comment.create({
         user_id: req.session.user_id,
+        identity: newId,
         comment: txt,
         date: date
     }).then(() => {
-        res.json("good job")
+        res.json("Good Job")
     })
         .catch((err) => {
             if (err instanceof Sequelize.ValidationError)
-                console.log(`Can not add the new comment to the database ${err} ${err.message}`);
+                console.log(`Can not add the new comment to the database, ${err} ${err.message}`);
             else
                 console.log(`other error ${err}`);
         })
 };
+
+/**
+ * To delete the comments from the database
+ * @param req
+ * @param res
+ * @returns {Promise<void>}
+ */
 exports.deleteComment = async (req, res) => {
     const {date, id} = req.body;
-
-    const del = await db.Comment.destroy({where: { date: date,id:id }});
-
+    const del = await db.Comment.destroy({where: { date: date,identity:id }});
    if(del)
-       res.json("good job")
+       res.json("Good Job")
 };
+
+
+//module.exports = router;
 

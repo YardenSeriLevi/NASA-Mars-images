@@ -18,7 +18,6 @@
 
     /** The DOM */
     document.addEventListener("DOMContentLoaded", function () {
-
         const firstName = document.getElementById("firstName")
         const lastName = document.getElementById("lastName")
         const email = document.getElementById("email")
@@ -35,7 +34,6 @@
         {
             validations.validateEmail(email.value.trim(),"email-error")
         })
-
         document.forms['register-form'].addEventListener("submit", function (event) {
 
             validations.validateFormFields(event,firstName.value.trim(),lastName.value.trim(),email.value.trim());
@@ -44,12 +42,11 @@
     });
 
     /**
-     *
+     * A function that checks the correctness of input entered by the user
      * @type {{validateFormFields: validateFormFields}}
      */
     const validations = function () {
-        /**
-         *
+        /** Calling functions that check the correctness of the username and his email
          * @param event
          * @param firstName
          * @param lastName
@@ -64,13 +61,13 @@
             if (status)
                 event.target.submit();
         }
+
         /**
-         *
+         * Checking that the username contains only letters, without spaces
          * @param str
          * @param error
          */
         function validateStr(str, error) {
-
             const regex = /^[a-zA-Z]+$/;
             if (regex.test(str) && str.toString().length <= STRINGMAXLENGTH && str.toString().length >= STRINGMINLENGTH)
                 document.querySelector(`.${error}`).innerText = "";
@@ -79,8 +76,9 @@
                 status = false;
             }
         }
+
         /**
-         *
+         * Checking the correctness of the email entered by the user
          * @param str
          */
         function validateEmail(str) {

@@ -2,11 +2,10 @@
 (function () {
     let password,confirmPassword;
     let status = true;
-    const errorMassage = ["The passwords must be the same", "The password must have: min 1 special character, min 1 number and min 8 characters "]
+    const errorMassage = ["The passwords must be the same", "The password must have: min 1 special character, " +
+    "min 1 number and min 8 characters "]
     const NOTEQUALPASSWORDS = 0;
     const NOTSTRONGPASSWORD = 1;
-
-
 
     /** A function that receives the elements and activates a toggle on them.
      * from d-nones, the elements become nones
@@ -22,16 +21,15 @@
             validations.validateFormFields(event);
 
         });
-
     });
+
     /**
-     *
+     * A function that checks the correctness of input entered by the user
      * @type {{validateFormFields: validateFormFields}}
      */
     const validations = function () {
-
         /**
-         *
+         * Checking the validity of the password entered by the user
          * @param event
          */
         function validateFormFields(event)
@@ -44,17 +42,14 @@
             validatePassword(password,confirmPassword);
             if(status)
                 event.target.submit();
-
         }
 
         /**
-         *
+         * Checking the validity of the password entered by the user
          * @param password
          * @param confirmPassword
          */
         function validatePassword(password,confirmPassword) {
-
-
             let passwordError = document.querySelector(".password-error")
             let confirmPasswordError = document.querySelector(".confirm-password-error")
 

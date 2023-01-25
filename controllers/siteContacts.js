@@ -4,15 +4,14 @@ const Cookies = require('cookies')
 const Sequelize = require('sequelize');
 const db = require('../models');
 const keys = ['keyboard cat']
+
 /**
- *
+ * To get login page with the details of the user
  * @param req
  * @param res
  */
 exports.getLoginPage = (req, res) => {
-
     const cookies = new Cookies(req, res, {keys: keys})
-
     const success = cookies.get('success')
     const error = cookies.get('errorLogin')
 
@@ -25,32 +24,18 @@ exports.getLoginPage = (req, res) => {
         res.redirect('nasa');
     } else
         res.render('login', {success: "", error: ""});
-
 };
 
 /**
- *
+ * To post login page and check if the user exist in the data base
  * @param req
  * @param res
  */
 exports.postLogin = async (req, res) => {
     const cookies = new Cookies(req, res, {keys: keys})
     const {email, password} = req.body;
-    // return db.Contact.findOne({where: {email: email, password: password}}
-    // ).then((contact) => {
-    //     if (contact) {
-    //         console.log(contact.toJSON + "user name:" +contact.userName.toJSON)
-    //         req.session.login = true;
-    //         req.session.userName = contact.userName;
-    //         res.redirect('nasa');
-    //     } else {
-    //         cookies.set('errorLogin', 'The user does not exist, Please register first', {signed: true, maxAge: 1000})
-    //         res.redirect('login');
-    //     }
-    // })
-    //     .catch((err) => {
-    //     })
     const user = await db.Contact.findOne({where: {email: email, password: password}});
+
     if (user !== null) {
         req.session.login = true;
         req.session.firstName = user.firstName;
@@ -63,13 +48,12 @@ exports.postLogin = async (req, res) => {
     }
 }
 /**
- *
+ * To get Register page and to get the details of the user: first name, last name and email
  * @param req
  * @param res
  */
 exports.getRegisterPage = (req, res) => {
     const cookies = new Cookies(req, res, {keys: keys});
-
     const error = cookies.get('expired')
     const emailError = cookies.get('emailExistError')
     let userData = cookies.get('data', {signed: true});
@@ -80,6 +64,7 @@ exports.getRegisterPage = (req, res) => {
         res.render('register', {
             error: emailError
         });
+
     } else if (userData) {
         let allData = JSON.parse(userData);
         res.render('register', {
@@ -95,7 +80,8 @@ exports.getRegisterPage = (req, res) => {
 
 
 /**
- *
+ * To post Register page and to keep the details of the user: first name, last name and email in
+ * the data base
  * @param req
  * @param res
  */
@@ -119,24 +105,22 @@ exports.postRegister = async (req, res) => {
         } else {
             cookies.set('data', JSON.stringify(data), {signed: true, maxAge: 30 * 1000})
             res.redirect('password')
-//need to add user to database and send redirect to password page
         }
 
     } catch (err) {
-
 
     }
 }
 
 /**
- *
+ * To get Password Page
  * @param req
  * @param res
  */
 exports.getPasswordPage = (req, res) => {
     const cookies = new Cookies(req, res, {keys: keys})
-
     let userData = cookies.get('data', {signed: true});
+
     if (userData)
         res.render('password');
     else
@@ -144,13 +128,12 @@ exports.getPasswordPage = (req, res) => {
 }
 
 /**
- *
+ * To post Password Page
  * @param req
  * @param res
  */
 exports.postPassword = (req, res) => {
     const cookies = new Cookies(req, res, {keys: keys})
-
     const {password, confirmPassword} = req.body;
 
     let userData = cookies.get('data', {signed: true});
@@ -169,7 +152,6 @@ exports.postPassword = (req, res) => {
                 .catch((err) => {
                     if (err instanceof Sequelize.ValidationError)
                         console.log(`validation error ${err}`);
-                    // one possible error is that the phone is missing, check the model files for more details
                     else
                         console.log(`other error ${err}`);
                 })
