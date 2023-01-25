@@ -13,9 +13,6 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false
       },
-      identity: {
-        type: Sequelize.STRING
-      },
       comment: {
         type: Sequelize.STRING
       },

@@ -340,7 +340,7 @@
 
                     if(`${currComment}`.length > MINCOMMENTLEN && `${currComment}`.length <= MAXCOMMENTLEN )
                     {
-                        connectingToOurServer.postMethod(options);
+                        connectingToOurServer.postComment(options);
                         showComments(date);
                     }
 
@@ -397,7 +397,7 @@
                 "date": date
             };
             document.querySelector(`#allComments${date}`).innerText = "";
-            connectingToOurServer.getMethod(params);
+            connectingToOurServer.getComment(params);
         }
 
         /**
@@ -424,7 +424,7 @@
                     deleteButton.addEventListener('click', () => {
                         const params = {
                             "date": comment.date,
-                            "id": comment.identity,
+                            "id": comment.id,
                         }
                         const options = {
                             method: 'DELETE',
@@ -433,7 +433,7 @@
                                 'Content-Type': 'application/json',
                             },
                         };
-                        connectingToOurServer.deleteMethod(options);
+                        connectingToOurServer.deleteComment(options);
                         showComments(comment.date);
                     });
                     textP.appendChild(deleteButton);
@@ -487,7 +487,7 @@
     /**
      * Communication with the server for functions:
      * POST, DELETE and GET
-     * @type {{postMethod: postMethod, getMethod: getMethod, deleteMethod: deleteMethod}}
+     * @type {{postComment: postComment, getComment: getComment, deleteComment: deleteComment}}
      */
     const connectingToOurServer = function () {
 
@@ -495,7 +495,7 @@
          * GET function
          * @param params
          */
-        function getMethod(params) {
+        function getComment(params) {
             toggleElement("loadingGif");
             const queryString = new URLSearchParams(params).toString();
             fetch(`/api/comment/?${queryString}`)
@@ -515,7 +515,7 @@
          * POST function
          * @param options
          */
-        function postMethod(options) {
+        function postComment(options) {
             toggleElement("loadingGif");
             fetch('/api/comment', options)
                 .then((response) => response.json())
@@ -531,7 +531,7 @@
          * DELETE function
          * @param options
          */
-        function deleteMethod(options) {
+        function deleteComment(options) {
             toggleElement("loadingGif");
             fetch('/api/comment', options)
                 .then((response) => response.json())
@@ -541,9 +541,9 @@
         }
 
         return {
-            getMethod: getMethod,
-            postMethod: postMethod,
-            deleteMethod: deleteMethod
+            getComment: getComment,
+            postComment: postComment,
+            deleteComment: deleteComment
         }
     }();
 })

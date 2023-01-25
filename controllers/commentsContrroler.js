@@ -31,23 +31,7 @@ exports.getComments = async(req, res) => {
         res.json(commentList);
 
     }
-
-    // const list = db.getComment()
-    // const filteredList = list.filter((comment) => comment.date === date);
-    // res.status(200);
-    // res.setHeader('Content-Type', 'application/json');
-    // res.json(filteredList);
 };
-
-// router.get('/comment', (req, res) => {
-//     const { date} = req.query;
-//     const list = dbList.getComment()
-//     const filteredList = list.filter((comment) => comment.date === date);
-//     res.status(200);
-//     res.setHeader('Content-Type', 'application/json');
-//     res.json(filteredList);
-// });
-
 /**
  *
  * @param req
@@ -55,16 +39,13 @@ exports.getComments = async(req, res) => {
  */
 exports.postComment = async(req, res) => {
     let { date,txt } = req.body;
-    const commentList = await db.Comment.findAll({where: {date: date}});
-    const newId = commentList.length + 1;
+    // const commentList = await db.Comment.findAll({where: {date: date}});
 
     return db.Comment.create({
         user_id: req.session.user_id,
-        identity: newId,
         comment: txt,
         date: date
     }).then(() => {
-        console.log(`Good Job`)
         res.json("good job")
     })
         .catch((err) => {
@@ -74,27 +55,12 @@ exports.postComment = async(req, res) => {
                 console.log(`other error ${err}`);
         })
 };
-// router.post('/comment', (req, res) => {
-//     const { date, user,txt } = req.body;
-//     const newId = dbList.getComment().length + 1;
-//     let newComment = new Comment(newId, date, user, txt);
-//     dbList.addComment(newComment);
-//     res.json("good job")
-// });
-//
 exports.deleteComment = async (req, res) => {
     const {date, id} = req.body;
 
-    const del = await db.Comment.destroy({where: { date: date,identity:id }});
+    const del = await db.Comment.destroy({where: { date: date,id:id }});
 
    if(del)
        res.json("good job")
 };
-// router.delete('/comment', (req, res) => {
-//     const { date, id} = req.body;
-//     dbList.deleteComment(date,id);
-//     res.json("good job")
-// });
-//
-//module.exports = router;
 
