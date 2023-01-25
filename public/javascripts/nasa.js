@@ -3,7 +3,7 @@
 
     let sPicDate = new Date; //Start date of displaying the images
     let ePicDate; //End date of displaying the images
-    let numOfPicturs;
+    let numOfPicturs = 0;
     const NUMOFDAYS = 2; //A minimum of 3 images are shown in page
     const errorMassage = ["Please match the requested format", "Invalid date format",
         "It seems there are communication problems with the server",
@@ -118,7 +118,7 @@
                 createElements.createPicElements(date, explanation, title, picCopyright, type, picUrl);
                 numOfPicturs++;
             }
-            if (numOfPicturs === 3)
+            if (numOfPicturs === 3 )
                 toggleElement("more");
 
         }
@@ -438,15 +438,21 @@
             })
         }
 
+        function showMoreButton(){
+            if(numOfPicturs === 0)
+                toggleElement("more");
+        }
         /** The DOM */
         document.addEventListener("DOMContentLoaded", function () {
+            showMoreButton();
             document.forms['date-form'].addEventListener("submit", function (event) {
-
                 event.preventDefault();
                 ePicDate = document.getElementById("currDate").value;
                 validations.validateDate();
-                if (document.getElementById("more").getAttribute("class") !== "d-none")
-                    toggleElement("more");
+
+                // if (document.getElementById("more").getAttribute("class") !== "d-none")
+                //     toggleElement("more");
+                showMoreButton();
                 if (document.querySelector(".date-error").innerText === "") {
                     document.querySelector("#elements").innerText = "";
                     numOfPicturs = 0;
