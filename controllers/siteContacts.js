@@ -4,6 +4,7 @@ const Cookies = require('cookies')
 const Sequelize = require('sequelize');
 const db = require('../models');
 const keys = ['keyboard cat']
+let errors = ['Incorrect username or password, or you are not registered on the site. Please try again', 'Can not login right now, please try again later']
 
 /**
  * To get login page with the details of the user
@@ -34,8 +35,10 @@ exports.getLoginPage = (req, res) => {
 exports.postLogin = async (req, res) => {
     const cookies = new Cookies(req, res, {keys: keys})
     const {email, password} = req.body;
-    const user = await db.Contact.findOne({where: {email: email, password: password}});
-
+    // const user = await db.Contact.findOne({where: {email: email, password: password}});
+    return  db.Contact.findOne({where: {email: email, password: password}})
+    .then((user) =>
+{
     if (user !== null) {
         req.session.login = true;
         req.session.firstName = user.firstName;
@@ -43,9 +46,22 @@ exports.postLogin = async (req, res) => {
         req.session.lastName = user.lastName;
         res.redirect('nasa');
     } else {
-        cookies.set('errorLogin', 'The user does not exist, Please register first', {signed: true, maxAge: 1000})
+        cookies.set('errorLogin', 'Incorrect username or password, or you are not registered on the site. Please try again', {signed: true, maxAge: 1000})
         res.redirect('login');
     }
+    // res.setHeader('Content-Type', 'application/json');
+    // res.json(commentList)
+})
+    .catch((error)=>
+    {
+        cookies.set('errorLogin', 'Can not login right now, please try again later', {signed: true, maxAge: 1000})
+        res.redirect('login');
+        // res.status = 400;
+        // res.error = error;
+    });
+
+
+
 }
 /**
  * To get Register page and to get the details of the user: first name, last name and email

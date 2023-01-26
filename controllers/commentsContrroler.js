@@ -13,7 +13,6 @@ const keys = ['keyboard cat']
  */
 exports.getComments = async(req, res) => {
     const {date} = req.query;
-    console.log("in get server")
     return db.Comment.findAll({
         where: {date: date},
         include: [{
