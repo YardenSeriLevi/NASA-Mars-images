@@ -1,9 +1,8 @@
 var express = require('express');
-var router = express.Router();
-const Cookies = require('cookies')
+// var router = express.Router();
+// const Cookies = require('cookies')
 const Sequelize = require('sequelize');
 const db = require('../models');
-const keys = ['keyboard cat']
 
 
 /**
@@ -39,7 +38,6 @@ exports.getComments = async(req, res) => {
  */
 exports.postComment = async(req, res) => {
     let { date,txt } = req.body;
-    //const commentList = await db.Comment.findAll({where: {date: date}});
     return db.Comment.create({
         user_id: req.session.user_id,
         comment: txt,

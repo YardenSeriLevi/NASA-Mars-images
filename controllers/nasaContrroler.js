@@ -1,9 +1,9 @@
 var express = require('express');
-var router = express.Router();
-const Cookies = require('cookies')
-const Sequelize = require('sequelize');
-const db = require('../models');
-const keys = ['keyboard cat']
+// var router = express.Router();
+// const Cookies = require('cookies')
+// const Sequelize = require('sequelize');
+// const db = require('../models');
+// const keys = ['keyboard cat']
 
 /**
  * The user log out and goes to the login page

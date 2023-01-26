@@ -366,7 +366,7 @@
             commentLabel.appendChild(createButton(date, "Send", `button${date}`));
             input.setAttribute("type", "text");
             input.setAttribute("className", "form-control");
-            input.setAttribute("placeholder", "Enter a commend");
+            input.setAttribute("placeholder", "Enter a comment");
             input.setAttribute("id", `c${date}`);
 
             let errorWithServer = document.createElement("p");
@@ -422,7 +422,7 @@
                 commentDiv.appendChild(textP);
 
                 let userId = document.getElementById("userId").value ;
-                if (comment.user_id.toString() === userId ) {
+                if (comment.user_id == userId ) {
                     const deleteButton = createButton(comment.date, "Delete", `button${comment.identity}`)
                     deleteButton.addEventListener('click', () => {
                         const params = {
