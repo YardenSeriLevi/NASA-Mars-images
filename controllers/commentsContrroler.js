@@ -13,22 +13,23 @@ const keys = ['keyboard cat']
  */
 exports.getComments = async(req, res) => {
     const {date} = req.query;
-    const commentList = await db.Comment.findAll({
-                    where: {date: date},
-                    include: [{
-                      model:  db.Contact,
-                        attributes: ['firstName', 'lastName']
-                    }]
-                    });
-
-    if (commentList !== null) {
+    console.log("in get server")
+    return db.Comment.findAll({
+        where: {date: date},
+        include: [{
+            model:  db.Contact,
+            attributes: ['firstName', 'lastName']
+        }]
+    }).then((commentList) =>
+    {
         res.setHeader('Content-Type', 'application/json');
-        res.json(commentList);
-    }
-    else {
-        res.setHeader('Content-Type', 'application/json');
-        res.json(commentList);
-    }
+        res.json(commentList)
+    })
+        .catch((error)=>
+        {
+            res.status = 400;
+            res.error = error;
+        });
 };
 
 
@@ -39,8 +40,7 @@ exports.getComments = async(req, res) => {
  */
 exports.postComment = async(req, res) => {
     let { date,txt } = req.body;
-   //const commentList = await db.Comment.findAll({where: {date: date}});
-
+    //const commentList = await db.Comment.findAll({where: {date: date}});
     return db.Comment.create({
         user_id: req.session.user_id,
         comment: txt,
@@ -65,10 +65,8 @@ exports.postComment = async(req, res) => {
 exports.deleteComment = async (req, res) => {
     const {date, id} = req.body;
     const del = await db.Comment.destroy({where: { date: date,id:id }});
-   if(del)
-       res.json("Good Job")
+    if(del)
+        res.json("Good Job")
 };
 
-
-//module.exports = router;
 

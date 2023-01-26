@@ -34,12 +34,14 @@
          */
         function validateDate() {
             document.querySelector(".date-error").innerText = "";
-            if (ePicDate === "")
+            let curr_date =document.getElementById('currDate');
+            if (!curr_date.value)
                 getCurrentDate();
-            else if (!document.getElementById('currDate').checkValidity()) {
+            else if (!curr_date.checkValidity()) {
                 document.querySelector(".date-error").innerText = `${errorMassage[DATEERROR]}`;
                 ePicDate = "";
-            } else
+            }
+            else
                 sPicDate = displayDate(ePicDate, NUMOFDAYS);
         }
 
@@ -86,7 +88,12 @@
                 })
                 .then(display.displayWeb)
                 .catch(error => toHandleError(error))
-                .finally(()=> toggleElement("loadingGif"));;
+                .finally(()=>
+                {
+                    toggleElement("loadingGif");
+                    if (numOfPicturs === 3 && document.getElementById("more").getAttribute("class") === "d-none")
+                        toggleElement("more");
+                });
         }
 
         /**
@@ -118,8 +125,8 @@
                 createElements.createPicElements(date, explanation, title, picCopyright, type, picUrl);
                 numOfPicturs++;
             }
-            if (numOfPicturs === 3 )
-                toggleElement("more");
+            // if (numOfPicturs === 3 )
+            //     toggleElement("more");
 
         }
 
@@ -438,22 +445,19 @@
             })
         }
 
-        function showMoreButton(){
-            if(numOfPicturs === 0)
-                toggleElement("more");
-        }
+
         /** The DOM */
         document.addEventListener("DOMContentLoaded", function () {
-            showMoreButton();
             document.forms['date-form'].addEventListener("submit", function (event) {
                 event.preventDefault();
+                document.getElementById("more").classList.add("d-none");
+                document.querySelector("#elements").innerText = "";
                 ePicDate = document.getElementById("currDate").value;
                 validations.validateDate();
 
-                // if (document.getElementById("more").getAttribute("class") !== "d-none")
-                //     toggleElement("more");
-                showMoreButton();
                 if (document.querySelector(".date-error").innerText === "") {
+                    if (document.getElementById("more").getAttribute("class") !== "d-none")
+                        toggleElement("more");
                     document.querySelector("#elements").innerText = "";
                     numOfPicturs = 0;
                     display.getPicFromNasa();
@@ -496,7 +500,9 @@
                 .catch(function (error) {
                     document.querySelector(`#error${date}`).innerText = errorMassage[SERVERERROR];
                 })
-                .finally(()=> toggleElement("loadingGif"))
+                .finally(()=>{
+                    toggleElement("loadingGif")
+                })
         }
 
         /**
@@ -512,7 +518,10 @@
                 // print the error details
                 console.log(err);
             })
-                .finally(()=> toggleElement("loadingGif"));
+                .finally(()=>{
+                    toggleElement("loadingGif");
+
+                } )
         }
 
         /**
