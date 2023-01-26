@@ -11,6 +11,8 @@ const db = require('../models');
  * @param res
  */
 exports.getComments = async(req, res) => {
+    checkSettion(req, res);
+
     const {date} = req.query;
     return db.Comment.findAll({
         where: {date: date},
@@ -30,13 +32,13 @@ exports.getComments = async(req, res) => {
         });
 };
 
-
 /**
  * To post the comments to the database
  * @param req
  * @param res
  */
 exports.postComment = async(req, res) => {
+    checkSettion(req, res);
     let { date,txt } = req.body;
     return db.Comment.create({
         user_id: req.session.user_id,
@@ -60,10 +62,23 @@ exports.postComment = async(req, res) => {
  * @returns {Promise<void>}
  */
 exports.deleteComment = async (req, res) => {
+
+    checkSettion(req, res);
     const {date, id} = req.body;
     const del = await db.Comment.destroy({where: { date: date,id:id }});
     if(del)
         res.json("Good Job")
 };
+
+/**
+ *
+ * @param req
+ * @param res
+ */
+function checkSettion(req, res)
+{
+    if(!(req.session.login))
+        res.redirect('/login')
+}
 
 
