@@ -2,12 +2,14 @@
 const express = require('express');
 
 // load the controllers
-const comentsContrroler = require('../controllers/commentsContrroler');
+const commentsController = require('../controllers/commentsController');
 
 const router = express.Router();
 
-router.get('/comment',comentsContrroler.getComments)
-router.post('/comment',comentsContrroler.postComment)
-router.delete('/comment',comentsContrroler.deleteComment)
+router.use(commentsController.redirect);
+
+router.get('/comment',commentsController.getComments)
+router.post('/comment',commentsController.postComment)
+router.delete('/comment',commentsController.deleteComment)
 
 module.exports = router;

@@ -4,29 +4,33 @@ var express = require('express');
 const Sequelize = require('sequelize');
 const db = require('../models');
 
-
+/**
+ *
+ * @type {exports.redirect}
+ */
+exports.redirect = ((req, res, next) => {
+    if (!(req.session.login))
+        res.redirect('/login')
+    next()
+})
 /**
  * To get the comments from the database
  * @param req
  * @param res
  */
-exports.getComments = async(req, res) => {
-    checkSettion(req, res);
-
+exports.getComments = async (req, res) => {
     const {date} = req.query;
     return db.Comment.findAll({
         where: {date: date},
         include: [{
-            model:  db.Contact,
+            model: db.Contact,
             attributes: ['firstName', 'lastName']
         }]
-    }).then((commentList) =>
-    {
+    }).then((commentList) => {
         res.setHeader('Content-Type', 'application/json');
         res.json(commentList)
     })
-        .catch((error)=>
-        {
+        .catch((error) => {
             res.status = 400;
             res.error = error;
         });
@@ -37,9 +41,8 @@ exports.getComments = async(req, res) => {
  * @param req
  * @param res
  */
-exports.postComment = async(req, res) => {
-    checkSettion(req, res);
-    let { date,txt } = req.body;
+exports.postComment = async (req, res) => {
+    let {date, txt} = req.body;
     return db.Comment.create({
         user_id: req.session.user_id,
         comment: txt,
@@ -62,23 +65,10 @@ exports.postComment = async(req, res) => {
  * @returns {Promise<void>}
  */
 exports.deleteComment = async (req, res) => {
-
-    checkSettion(req, res);
     const {date, id} = req.body;
-    const del = await db.Comment.destroy({where: { date: date,id:id }});
-    if(del)
+    const del = await db.Comment.destroy({where: {date: date, id: id}});
+    if (del)
         res.json("Good Job")
 };
-
-/**
- *
- * @param req
- * @param res
- */
-function checkSettion(req, res)
-{
-    if(!(req.session.login))
-        res.redirect('/login')
-}
 
 

@@ -1,4 +1,3 @@
-
 (function () {
 
     let sPicDate = new Date; //Start date of displaying the images
@@ -15,6 +14,7 @@
     const APIKEY = "b6IndMxrOlZml8AHgoRDk7mOqUTN0fAyNNxrhGMy";
     const MINCOMMENTLEN = 0;
     const MAXCOMMENTLEN = 128;
+
     //const UPDATETIME = 15000;
 
     /** A function that receives the elements and activates a toggle on them.
@@ -34,14 +34,13 @@
          */
         function validateDate() {
             document.querySelector(".date-error").innerText = "";
-            let curr_date =document.getElementById('currDate');
+            let curr_date = document.getElementById('currDate');
             if (!curr_date.value)
                 getCurrentDate();
             else if (!curr_date.checkValidity()) {
                 document.querySelector(".date-error").innerText = `${errorMassage[DATEERROR]}`;
                 ePicDate = "";
-            }
-            else
+            } else
                 sPicDate = displayDate(ePicDate, NUMOFDAYS);
         }
 
@@ -88,8 +87,7 @@
                 })
                 .then(display.displayWeb)
                 .catch(error => toHandleError(error))
-                .finally(()=>
-                {
+                .finally(() => {
                     toggleElement("loadingGif");
                     if (numOfPicturs === 3 && document.getElementById("more").getAttribute("class") === "d-none")
                         toggleElement("more");
@@ -147,6 +145,7 @@
 
     const createElements = function () {
         let currComment;
+
         /**
          * Creating the HTML elements
          * @param date: the date of the picture
@@ -341,8 +340,7 @@
                         }
                     };
 
-                    if(`${currComment}`.length > MINCOMMENTLEN && `${currComment}`.length <= MAXCOMMENTLEN )
-                    {
+                    if (`${currComment}`.length > MINCOMMENTLEN && `${currComment}`.length <= MAXCOMMENTLEN) {
                         connectingToOurServer.postComment(options);
                         showComments(date);
                     }
@@ -409,7 +407,7 @@
          */
         function presentComments(comments) {
             comments.forEach((comment) => {
-                let name = comment.Contact.firstName+ " " +comment.Contact.lastName;
+                let name = comment.Contact.firstName + " " + comment.Contact.lastName;
                 const commentDiv = document.createElement('div');
                 commentDiv.setAttribute("class", 'bg-light')
 
@@ -421,8 +419,8 @@
                 textP.textContent = comment.comment + " ";
                 commentDiv.appendChild(textP);
 
-                let userId = document.getElementById("userId").value ;
-                if (comment.user_id == userId ) {
+                let userId = document.getElementById("userId").value;
+                if (comment.user_id == userId) {
                     const deleteButton = createButton(comment.date, "Delete", `button${comment.identity}`)
                     deleteButton.addEventListener('click', () => {
                         const params = {
@@ -494,13 +492,14 @@
                 .then(function (res) {
                     if (!res.ok)
                         throw(res.status)
+                    redirect(res);
                     return res.json()
                 })
                 .then((createElements.presentComments))
                 .catch(function (error) {
                     document.querySelector(`#error${date}`).innerText = errorMassage[SERVERERROR];
                 })
-                .finally(()=>{
+                .finally(() => {
                     toggleElement("loadingGif")
                 })
         }
@@ -512,16 +511,18 @@
         function postComment(options) {
             toggleElement("loadingGif");
             fetch('/api/comment', options)
-                .then((response) => response.json())
+                .then((response) => {
+                    redirect(response);
+                    response.json()})
                 .then((data) => console.log(data))
-                .catch(function(err) {
-                // print the error details
-                console.log(err);
-            })
-                .finally(()=>{
+                .catch(function (err) {
+                    // print the error details
+                    console.log(err);
+                })
+                .finally(() => {
                     toggleElement("loadingGif");
 
-                } )
+                })
         }
 
         /**
@@ -531,10 +532,24 @@
         function deleteComment(options) {
             toggleElement("loadingGif");
             fetch('/api/comment', options)
-                .then((response) => response.json())
+                .then((response) =>
+                {
+                    redirect(response);
+                    response.json()
+                })
                 .then((data) => console.log(data))
-                .finally(()=> toggleElement("loadingGif"));
+                .finally(() => toggleElement("loadingGif"));
 
+        }
+
+        /**
+         *
+         * @param res
+         */
+        function redirect(res)
+        {
+            if (res.redirected)
+                window.location.href = res.url
         }
 
         return {

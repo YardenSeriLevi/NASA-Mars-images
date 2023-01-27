@@ -20,6 +20,12 @@ const DATAPROBLEM = 6;
 const STRINGMAXLENGTH = 32;
 const STRINGMINLENGTH = 3;
 
+exports.redirect = ((req, res, next) => {
+    if (req.session.login)
+        res.redirect('nasa')
+    next()
+})
+
 /**
  * To get login page with the details of the user
  * @param req
@@ -34,10 +40,7 @@ exports.getLoginPage = (req, res) => {
         res.render('login', {success: success, error: ""});
     else if (error)
         res.render('login', {success: "", error: error});
-    else if (req.session.login) {
-        cookies.set('userName',)
-        res.redirect('nasa');
-    } else
+    else
         res.render('login', {success: "", error: ""});
 };
 
