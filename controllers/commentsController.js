@@ -1,15 +1,12 @@
 var express = require('express');
 const Sequelize = require('sequelize');
 const db = require('../models');
-// var express = require('express');
 var router = express.Router();
 const Cookies = require('cookies')
-// const Sequelize = require('sequelize');
-// const db = require('../models');
 const keys = ['keyboard cat']
 
 /**
- *
+ * Redirect to login page
  * @type {exports.redirect}
  */
 exports.redirect = ((req, res, next) => {

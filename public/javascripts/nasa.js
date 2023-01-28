@@ -15,8 +15,6 @@
     const MINCOMMENTLEN = 0;
     const MAXCOMMENTLEN = 128;
 
-    //const UPDATETIME = 15000;
-
     /** A function that receives the elements and activates a toggle on them.
      * from d-nones, the elements become nones
      * @param elm: element
@@ -123,9 +121,6 @@
                 createElements.createPicElements(date, explanation, title, picCopyright, type, picUrl);
                 numOfPicturs++;
             }
-            // if (numOfPicturs === 3 )
-            //     toggleElement("more");
-
         }
 
         function setDates() {
@@ -145,7 +140,6 @@
 
     const createElements = function () {
         let currComment;
-
         /**
          * Creating the HTML elements
          * @param date: the date of the picture
@@ -383,8 +377,6 @@
 
                 if (document.getElementById(`cLabel${date}`).getAttribute("class") !== "d-none") {
                     showComments(date);
-                    //Update the page every 15 seconds
-                    // setInterval(() => showComments(date), UPDATETIME);
                 }
             });
         }
@@ -515,7 +507,6 @@
                     response.json()})
                 .then((data) => console.log(data))
                 .catch(function (err) {
-                    // print the error details
                     console.log(err);
                 })
                 .finally(() => {
@@ -542,7 +533,7 @@
         }
 
         /**
-         *
+         * redirect function
          * @param res
          */
         function redirect(res)

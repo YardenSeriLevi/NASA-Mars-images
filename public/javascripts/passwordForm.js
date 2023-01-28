@@ -9,13 +9,6 @@
     const STRINGMAXLENGTH = 32;
     const STRINGMINLENGTH = 3;
 
-    /** A function that receives the elements and activates a toggle on them.
-     * from d-nones, the elements become nones
-     * @param elm: element
-     */
-    function toggleElement(elm) {
-        document.getElementById(`${elm}`).classList.toggle("d-none");
-    }
 
     /** The DOM */
     document.addEventListener("DOMContentLoaded", function () {
@@ -74,8 +67,6 @@
                 status = false;
             }
         }
-
-
         return {
             validateFormFields: validateFormFields,
 

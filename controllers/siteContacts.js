@@ -16,8 +16,6 @@ const EMAILEXISTS = 3;
 const PASSWORDPROBLEM = 4;
 const EXPIRED = 5;
 const DATAPROBLEM = 6;
-const STRINGMAXLENGTH = 32;
-const STRINGMINLENGTH = 3;
 
 /**
  * Clear the cache memory
@@ -237,7 +235,7 @@ function itsGoodPassword(password, confirmPassword) {
 }
 
 /**
- *
+ * A function that checks the validity of the data of the user
  * @param firstName
  * @param lastName
  * @param email
@@ -249,7 +247,7 @@ function itsGoodData(firstName,lastName,email)
 }
 
 /**
- *
+ * A function that checks the validity of the username ,on the server side
  * @param str
  * @returns {boolean}
  */
@@ -259,7 +257,7 @@ function validateStr(str) {
 }
 
 /**
- *
+ * A function that checks the validity of the email ,on the server side
  * @param str
  * @returns {boolean}
  */
