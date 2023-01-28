@@ -38,10 +38,7 @@ exports.preventCashing = (req, res, next) => {
  * @param next
  */
 exports.redirect = (req, res, next) => {
- console.log("res.url = " +res.url)
- console.log("res.redirect = " +res.redirect.address)
-
-    if (req.session.login && res.url !== "nasa")
+    if (req.session.login && req.url !== "/nasa")
         res.redirect('nasa')
     next()
 }

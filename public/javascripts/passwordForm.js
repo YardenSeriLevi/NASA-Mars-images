@@ -6,6 +6,8 @@
     "min 1 number and min 8 characters "]
     const NOTEQUALPASSWORDS = 0;
     const NOTSTRONGPASSWORD = 1;
+    const STRINGMAXLENGTH = 32;
+    const STRINGMINLENGTH = 3;
 
     /** A function that receives the elements and activates a toggle on them.
      * from d-nones, the elements become nones
@@ -53,9 +55,7 @@
             let passwordError = document.querySelector(".password-error")
             let confirmPasswordError = document.querySelector(".confirm-password-error")
 
-            const regex =  /^(?=.*\d)(?=.*[#$@!%&*?])[A-Za-z\d#$@!%&*?]{8,}$/
-            // if (regex.test(password) && password === confirmPassword)
-            if (password === confirmPassword)
+            if (password === confirmPassword && password.length >= STRINGMINLENGTH &&  password.length <= STRINGMAXLENGTH)
             {
                 passwordError.innerText = "";
                 confirmPasswordError.innerText = "";

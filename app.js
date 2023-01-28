@@ -28,7 +28,7 @@ app.use(session({
     cookie: {maxAge:10*60*1000} // milliseconds!
 }));
 
-app.use('/index', indexRouter);
+app.use('/', indexRouter);
 app.use('/api', commentRouter);
 //app.use('/', defaultRouter);
 
