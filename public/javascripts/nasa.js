@@ -443,7 +443,6 @@
             })
         }
 
-
         /** The DOM */
         document.addEventListener("DOMContentLoaded", function () {
             document.forms['date-form'].addEventListener("submit", function (event) {

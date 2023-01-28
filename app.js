@@ -11,18 +11,6 @@ var defaultRouter = require('./routes/default');
 
 var app = express();
 
-
-// app.use((req, res, next) => {
-//     res.set('Cache-Control', 'no-store')
-//     next()
-// });
-// app.use((req, res, next) => {
-//     res.set('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
-//     res.set('Pragma', 'no-cache');
-//     next()
-// });
-
-
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -40,9 +28,9 @@ app.use(session({
     cookie: {maxAge:10*60*1000} // milliseconds!
 }));
 
-app.use('/', indexRouter);
+app.use('/index', indexRouter);
 app.use('/api', commentRouter);
-//app.use('/index', defaultRouter);
+//app.use('/', defaultRouter);
 
 
 
