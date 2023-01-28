@@ -1,6 +1,4 @@
 var express = require('express');
-// var router = express.Router();
-// const Cookies = require('cookies')
 const Sequelize = require('sequelize');
 const db = require('../models');
 
@@ -13,6 +11,7 @@ exports.redirect = ((req, res, next) => {
         res.redirect('/login')
     next()
 })
+
 /**
  * To get the comments from the database
  * @param req

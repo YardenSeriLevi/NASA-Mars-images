@@ -1,7 +1,6 @@
 var express = require('express');
-// var router = express.Router();
+var router = express.Router();
 const Cookies = require('cookies')
-// const Sequelize = require('sequelize');
 const db = require('../models');
 const keys = ['keyboard cat']
 const Messages = ['Incorrect username or password, or you are not registered on the site. Please try again',
@@ -20,13 +19,24 @@ const DATAPROBLEM = 6;
 const STRINGMAXLENGTH = 32;
 const STRINGMINLENGTH = 3;
 
-
+/**
+ * Clear the cache memory
+ * @param req
+ * @param res
+ * @param next
+ */
 exports.preventCashing = (req, res, next) => {
     res.set('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
     res.set('Pragma', 'no-cache');
     next();
 }
 
+/**
+ * Prevent web redirect to other pages, while session is login
+ * @param req
+ * @param res
+ * @param next
+ */
 exports.redirect = (req, res, next) => {
  console.log("res.url = " +res.url)
  console.log("res.redirect = " +res.redirect.address)
@@ -80,6 +90,7 @@ exports.postLogin = async (req, res) => {
             res.redirect('login');
         });
 }
+
 /**
  * To get Register page and to get the details of the user: first name, last name and email
  * @param req
@@ -113,13 +124,12 @@ exports.getRegisterPage = (req, res) => {
 
 
 /**
- * To post Register page and to keep the details of the user: first name, last name and email in
+ * To do post method in Register page and to keep the details of the user: first name, last name and email in
  * the database
  * @param req
  * @param res
  */
 exports.postRegister = async (req, res) => {
-
     const cookies = new Cookies(req, res, {keys: keys})
     const {firstName, lastName, email} = req.body;
     if(itsGoodData(firstName,lastName,email))
@@ -220,7 +230,7 @@ exports.postPassword = (req, res) => {
 }
 
 /**
- *
+ * A function that checks if the password is the same as the confirmPassword, on the server side
  * @param password
  * @param confirmPassword
  * @returns {boolean}
