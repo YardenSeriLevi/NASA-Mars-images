@@ -20,8 +20,18 @@ const DATAPROBLEM = 6;
 const STRINGMAXLENGTH = 32;
 const STRINGMINLENGTH = 3;
 
+
+exports.preventCashing = (req, res, next) => {
+    res.set('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
+    res.set('Pragma', 'no-cache');
+    next()
+}
+
 exports.redirect = ((req, res, next) => {
-    if (req.session.login)
+ console.log("res.url = " +res.url)
+ console.log("res.redirect = " +res.redirect.address)
+
+    if (req.session.login && res.url !== "nasa")
         res.redirect('nasa')
     next()
 })
