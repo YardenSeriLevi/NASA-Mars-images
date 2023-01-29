@@ -3,6 +3,7 @@ var router = express.Router();
 const Cookies = require('cookies')
 const db = require('../models');
 const keys = ['keyboard cat']
+const bcrypt = require('bcrybt')
 const Messages = ['Incorrect username or password, or you are not registered on the site. Please try again',
     'Can not login right now, please try again later', 'Can not register right now, please try again later',
     'This email already exist, please register with another one',
@@ -16,7 +17,8 @@ const EMAILEXISTS = 3;
 const PASSWORDPROBLEM = 4;
 const EXPIRED = 5;
 const DATAPROBLEM = 6;
-
+const STRINGMINLENGTH = 3;
+const STRINGMAXLENGTH = 32;
 /**
  * Clear the cache memory
  * @param req
@@ -70,10 +72,7 @@ exports.postLogin = async (req, res) => {
     return db.Contact.findOne({where: {email: email.toLowerCase(), password: password}})
         .then((user) => {
             if (user) {
-                req.session.login = true;
-                req.session.firstName = user.firstName;
-                req.session.user_id = user.id;
-                req.session.lastName = user.lastName;
+                createSession(req,user)
                 res.redirect('nasa');
             } else {
                 cookies.set('errorLogin', `${Messages[PROBLEMWITHUSER]}`, {signed: true, maxAge: 1000})
@@ -224,6 +223,13 @@ exports.postPassword = (req, res) => {
     }
 }
 
+function createSession(req,user)
+{
+    req.session.login = true;
+    req.session.firstName = user.firstName;
+    req.session.user_id = user.id;
+    req.session.lastName = user.lastName;
+}
 /**
  * A function that checks if the password is the same as the confirmPassword, on the server side
  * @param password

@@ -28,8 +28,9 @@ app.use(session({
     cookie: {maxAge:10*60*1000} // milliseconds!
 }));
 
-app.use('/', indexRouter);
 app.use('/api', commentRouter);
+app.use('/', indexRouter);
+
 
 
 // catch 404 and forward to error handler

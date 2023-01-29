@@ -6,7 +6,7 @@ const siteContactsController = require('../controllers/siteContacts');
 const nasaController = require('../controllers/nasaContrroler');
 const router = express.Router();
 
-router.use(siteContactsController.redirect);
+ router.use(siteContactsController.redirect);
 
 router.use(siteContactsController.preventCashing);
 
