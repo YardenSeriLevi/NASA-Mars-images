@@ -10,15 +10,20 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       firstName: {
+        notNull: true,
         type: Sequelize.STRING
       },
       lastName: {
+        notNull: true,
         type: Sequelize.STRING
       },
       email: {
+        isEmail: true,
+        notNull: true,
         type: Sequelize.STRING
       },
       password: {
+        notNull: true,
         type: Sequelize.STRING
       },
       createdAt: {

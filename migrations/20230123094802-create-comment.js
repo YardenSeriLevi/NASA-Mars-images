@@ -14,9 +14,11 @@ module.exports = {
         allowNull: false
       },
       comment: {
+        notNull: true,
         type: Sequelize.STRING
       },
       date: {
+        notNull: true,
         type: Sequelize.STRING
       },
       createdAt: {

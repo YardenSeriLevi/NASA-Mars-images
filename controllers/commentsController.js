@@ -1,10 +1,6 @@
 var express = require('express');
 const Sequelize = require('sequelize');
 const db = require('../models');
-var router = express.Router();
-const Cookies = require('cookies')
-const keys = ['keyboard cat']
-
 /**
  * Redirect to login page
  * @type {exports.redirect}
@@ -32,10 +28,7 @@ exports.getComments = async (req, res) => {
         res.setHeader('Content-Type', 'application/json');
         res.json(commentList)
     })
-        .catch((error) => {
-            res.status = 400;
-            res.error = error;
-        });
+        .catch(() => setError(res));
 };
 
 /**
@@ -52,12 +45,7 @@ exports.postComment = async (req, res) => {
     }).then(() => {
         res.json("Good Job")
     })
-        .catch((err) => {
-            if (err instanceof Sequelize.ValidationError)
-                console.log(`Can not add the new comment to the database, ${err} ${err.message}`);
-            else
-                console.log(`other error ${err}`);
-        })
+        .catch(() => setError(res));
 };
 
 /**
@@ -68,9 +56,19 @@ exports.postComment = async (req, res) => {
  */
 exports.deleteComment = async (req, res) => {
     const {date, id} = req.body;
-    const del = await db.Comment.destroy({where: {date: date, id: id}});
-    if (del)
-        res.json("Good Job")
+    return db.Comment.destroy({where: {date: date, id: id}})
+        .then(() => {
+            res.json("Good Job")
+        })
+        .catch(() => setError(res));
 };
 
-
+/**
+ * function that return error status to the client
+ * @param res
+ */
+function setError(res)
+{
+    res.status = 400;
+    res.json("not good");
+}

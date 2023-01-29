@@ -6,3 +6,6 @@
 
 # Anael Mizrahi, id. 205410293, anaelmi@edu.hac.ac.il
 
+need to create dataBase by the command: node_modules/.bin/sequelize db:migrate
+
+need to create node_modules file by the command:npm install 

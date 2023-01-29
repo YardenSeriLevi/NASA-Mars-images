@@ -5,7 +5,7 @@
     let numOfPicturs = 0;
     const NUMOFDAYS = 2; //A minimum of 3 images are shown in page
     const errorMassage = ["Please match the requested format", "Invalid date format",
-        "It seems there are communication problems with the server",
+        "It seems that something went wrong please try again later",
         "It seems that something went wrong in communication with NASA or that NASA still does not have a photo from this date"];
     const NAMEERROR = 0;
     const DATEERROR = 1;
@@ -31,12 +31,13 @@
         /** A function that checks the correctness of the date that entered by the user
          */
         function validateDate() {
-            document.querySelector(".date-error").innerText = "";
+            let dateError = document.querySelector(".date-error");
+            dateError.innerText = "";
             let curr_date = document.getElementById('currDate');
             if (!curr_date.value)
                 getCurrentDate();
             else if (!curr_date.checkValidity()) {
-                document.querySelector(".date-error").innerText = `${errorMassage[DATEERROR]}`;
+                dateError.innerText = `${errorMassage[DATEERROR]}`;
                 ePicDate = "";
             } else
                 sPicDate = displayDate(ePicDate, NUMOFDAYS);
@@ -472,6 +473,7 @@
      * @type {{postComment: postComment, getComment: getComment, deleteComment: deleteComment}}
      */
     const connectingToOurServer = function () {
+        let serverError = document.querySelector(".serverError");
         /**
          * GET function
          * @param params
@@ -487,8 +489,8 @@
                     return res.json()
                 })
                 .then((createElements.presentComments))
-                .catch(function (error) {
-                    document.querySelector(`#error${date}`).innerText = errorMassage[SERVERERROR];
+                .catch(function () {
+                    serverError.innerText = errorMassage[SERVERERROR];
                 })
                 .finally(() => {
                     toggleElement("loadingGif")
@@ -500,36 +502,33 @@
          * @param options
          */
         function postComment(options) {
-            toggleElement("loadingGif");
-            fetch('/api/comment', options)
-                .then((response) => {
-                    redirect(response);
-                    response.json()})
-                .then((data) => console.log(data))
-                .catch(function (err) {
-                    console.log(err);
-                })
-                .finally(() => {
-                    toggleElement("loadingGif");
-
-                })
+            connectWithServer(options);
         }
-
         /**
          * DELETE function
          * @param options
          */
         function deleteComment(options) {
+            connectWithServer(options);
+
+        }
+        function  connectWithServer(options)
+        {
             toggleElement("loadingGif");
             fetch('/api/comment', options)
                 .then((response) =>
                 {
+                    if (!response.ok)
+                        throw(response.status)
+
                     redirect(response);
                     response.json()
                 })
-                .then((data) => console.log(data))
+                .then()
+                .catch(function () {
+                    serverError.innerText = errorMassage[SERVERERROR];
+                })
                 .finally(() => toggleElement("loadingGif"));
-
         }
 
         /**

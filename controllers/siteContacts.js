@@ -3,7 +3,7 @@ var router = express.Router();
 const Cookies = require('cookies')
 const db = require('../models');
 const keys = ['keyboard cat']
-const bcrypt = require('bcrybt')
+const bcrypt = require('bcrypt')
 const Messages = ['Incorrect username or password, or you are not registered on the site. Please try again',
     'Can not login right now, please try again later', 'Can not register right now, please try again later',
     'This email already exist, please register with another one',
@@ -19,6 +19,7 @@ const EXPIRED = 5;
 const DATAPROBLEM = 6;
 const STRINGMINLENGTH = 3;
 const STRINGMAXLENGTH = 32;
+const SALTROUNDS = 10;
 /**
  * Clear the cache memory
  * @param req
@@ -38,7 +39,7 @@ exports.preventCashing = (req, res, next) => {
  * @param next
  */
 exports.redirect = (req, res, next) => {
-    if (req.session.login && req.url !== "/nasa")
+    if (req.session.login && req.url !== "/nasa" && req.url !== "/logOut" )
         res.redirect('nasa')
     next()
 }
@@ -69,19 +70,16 @@ exports.getLoginPage = (req, res) => {
 exports.postLogin = async (req, res) => {
     const cookies = new Cookies(req, res, {keys: keys})
     const {email, password} = req.body;
-    return db.Contact.findOne({where: {email: email.toLowerCase(), password: password}})
+    return db.Contact.findOne({where: {email: email.toLowerCase()}})
         .then((user) => {
             if (user) {
-                createSession(req,user)
-                res.redirect('nasa');
+                inscriptPassword(res,req,user,cookies)
             } else {
-                cookies.set('errorLogin', `${Messages[PROBLEMWITHUSER]}`, {signed: true, maxAge: 1000})
-                res.redirect('login');
+                loginError(res,cookies,Messages[PROBLEMWITHUSER]);
             }
         })
         .catch((error) => {
-            cookies.set('errorLogin', `${Messages[PROBLEMWITHDATABASE]}`, {signed: true, maxAge: 1000})
-            res.redirect('login');
+            loginError(res,cookies,Messages[PROBLEMWITHDATABASE]);
         });
 }
 
@@ -188,31 +186,9 @@ exports.postPassword = (req, res) => {
 
     let userData = cookies.get('data', {signed: true});
     if (userData) {
-        let allData = JSON.parse(userData);
+
         if (itsGoodPassword(password, confirmPassword)) {
-            return db.Contact.create({
-                firstName: allData.firstName,
-                lastName: allData.lastName,
-                email: allData.email,
-                password: password
-            }).then((user) => {
-                if (user) {
-                    cookies.set('success', 'You have successfully registered to the site', {signed: true, maxAge: 1000})
-                    res.redirect('/login')
-                } else {
-                    cookies.set('passwordError', `${Messages[PASSWORDPROBLEM]}`, {signed: true, maxAge: 1000})
-                    res.redirect('/password');
-                }
-
-            })
-                .catch((error) => {
-                    cookies.set('registerError', `${Messages[REGISTERPROBLEMWITHDATABASE]}`, {
-                        signed: true,
-                        maxAge: 1000
-                    })
-                    res.redirect('register');
-                });
-
+            createUser(userData,res,req,cookies);
         } else {
             cookies.set('passwordError', `${Messages[PASSWORDPROBLEM]}`, {signed: true, maxAge: 1000})
             res.redirect('/password');
@@ -223,12 +199,97 @@ exports.postPassword = (req, res) => {
     }
 }
 
+
+function inscriptPassword(res,req,user,cookies)
+{
+    bcrypt.compare(req.body.password,user.password)
+        .then(res => {
+            if(res)
+            {
+                createSession(req,user);
+                res.redirect('nasa');
+            }
+            else
+            {
+                loginError(res,cookies,Messages[PASSWORDPROBLEM]);
+            }
+        }).catch(()=>
+    {
+        loginError(res,cookies,Messages[PASSWORDPROBLEM]);
+    })
+}
+
+/**
+ *
+ * @param req
+ * @param user
+ */
 function createSession(req,user)
 {
     req.session.login = true;
     req.session.firstName = user.firstName;
     req.session.user_id = user.id;
     req.session.lastName = user.lastName;
+}
+
+/**
+ * function that inscription the password and create new user
+ * @param userData
+ * @param res
+ * @param req
+ * @param cookies
+ */
+function createUser(userData,res,req,cookies) {
+    let allData = JSON.parse(userData);
+    bcrypt.hash(req.body.password, SALTROUNDS)
+        .then(hash => {
+            db.Contact.create({
+                firstName: allData.firstName,
+                lastName: allData.lastName,
+                email: allData.email,
+                password: hash
+            }).then((user) => {
+                if (user) {
+                    cookies.set('success', 'You have successfully registered to the site', {signed: true, maxAge: 1000})
+                    res.redirect('/login')
+                } else {
+                    cookies.set('passwordError', `${Messages[PASSWORDPROBLEM]}`, {signed: true, maxAge: 1000})
+                    res.redirect('/password');
+                }
+
+            })
+                .catch(() => {
+                    registerError(res, cookies);
+                });
+        }).catch(() => {
+        registerError(res, cookies);
+    })
+}
+
+/**
+ * function that create cookies with login error
+ * @param res
+ * @param cookies
+ * @param error
+ */
+function loginError(res,cookies,error)
+{
+    cookies.set('errorLogin', `${error}`, {signed: true, maxAge: 1000})
+    res.redirect('login');
+}
+
+/**
+ *  function that create cookies with register error
+ * @param res
+ * @param cookies
+ */
+function registerError(res,cookies)
+{
+    cookies.set('registerError', `${Messages[REGISTERPROBLEMWITHDATABASE]}`, {
+        signed: true,
+        maxAge: 1000
+    })
+    res.redirect('register');
 }
 /**
  * A function that checks if the password is the same as the confirmPassword, on the server side
@@ -251,7 +312,6 @@ function itsGoodData(firstName,lastName,email)
 {
     return validateStr(firstName) && validateStr(lastName) && validateEmail(email)
 }
-
 /**
  * A function that checks the validity of the username ,on the server side
  * @param str
