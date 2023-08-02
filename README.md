@@ -1,11 +1,11 @@
-# ex6-express-neviiim-ex6_yarden_seri_levi_anael_mizrahi
+# NASA-Mars-images
 
-# Authors:
 
-# Yarden Cohen, id. 315177832, yardenco@edu.hac.ac.il
+Need to create dataBase by the command: node_modules/.bin/sequelize db:migrate
 
-# Anael Mizrahi, id. 205410293, anaelmi@edu.hac.ac.il
+Need to create node_modules file by the command:npm install 
 
-need to create dataBase by the command: node_modules/.bin/sequelize db:migrate
+In order for the site to work as it should, you must register with NASA and receive an API KEY and enter it on
+the nasa.js page
 
-need to create node_modules file by the command:npm install 
+The site available on http://localhost:3000

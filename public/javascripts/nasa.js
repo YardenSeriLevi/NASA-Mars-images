@@ -11,7 +11,7 @@
     const DATEERROR = 1;
     const SERVERERROR = 2;
     const NASAERROR = 3;
-    const APIKEY = "b6IndMxrOlZml8AHgoRDk7mOqUTN0fAyNNxrhGMy";
+    const APIKEY = "NASA API KEY should be added here";
     const MINCOMMENTLEN = 0;
     const MAXCOMMENTLEN = 128;
 
